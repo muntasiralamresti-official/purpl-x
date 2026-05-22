@@ -15,11 +15,12 @@ export default function Navbar() {
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 cursor-pointer">
             <Image
-              src="/purpl.png"
-              width={160}
-              height={40}
-              alt="Profile Pictur"
-            />
+  src="/purpl-x.png"
+  width={160}
+  height={40}
+  alt="Purpl Logo"
+  className="object-contain"
+/>
           </Link>
 
           {/* SEARCH BAR */}
