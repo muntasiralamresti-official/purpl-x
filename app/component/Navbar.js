@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Settings, User2 } from "lucide-react";
+import {
+  MessageCircle,
+  MessageCircleCheck,
+  MessageCircleIcon,
+  Search,
+  Settings,
+  User2,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,12 +22,12 @@ export default function Navbar() {
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 cursor-pointer">
             <Image
-  src="/purpl-x.png"
-  width={160}
-  height={40}
-  alt="Purpl Logo"
-  className="object-contain"
-/>
+              src="/purpl-x.png"
+              width={160}
+              height={40}
+              alt="Purpl Logo"
+              className="object-contain"
+            />
           </Link>
 
           {/* SEARCH BAR */}
@@ -45,7 +52,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {/* SETTINGS */}
             <button className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border border-black/30 flex items-center justify-center text-gray-300 hover:bg-black/70 hover:text-white transition-all">
-              <Settings size={25} />
+              <MessageCircleIcon size={25} />
             </button>
 
             {/* USER ICON */}
