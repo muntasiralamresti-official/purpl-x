@@ -19,43 +19,24 @@ import {
   Bookmark,
 } from "lucide-react";
 
-export default function PostCard({
-  post,
-  details = false,
-}) {
-
-  const [openMenu, setOpenMenu] =
-    useState(false);
+export default function PostCard({ post, details = false }) {
+  const [openMenu, setOpenMenu] = useState(false);
 
   const menuRef = useRef(null);
 
   /* CLOSE MENU OUTSIDE CLICK */
   useEffect(() => {
-
     function handleClickOutside(event) {
-
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(
-          event.target
-        )
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpenMenu(false);
       }
     }
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-
   }, []);
 
   return (
@@ -70,23 +51,17 @@ export default function PostCard({
         relative
       "
     >
-      
       {/* TOP */}
       <div className="flex items-start justify-between p-5">
-        
         {/* USER */}
         <div className="flex items-center gap-3">
-          
           {/* AVATAR */}
           <div
             className="
               w-14 h-14
               rounded-full
-              bg-gradient-to-br
-              from-blue-500
-              via-indigo-500
-              to-purple-600
-              shadow-lg shadow-purple-500/30
+              bg-brand
+              
               flex items-center justify-center
               text-white
             "
@@ -111,16 +86,10 @@ export default function PostCard({
         </div>
 
         {/* MENU */}
-        <div
-          className="relative"
-          ref={menuRef}
-        >
-          
+        <div className="relative" ref={menuRef}>
           {/* BUTTON */}
           <button
-            onClick={() =>
-              setOpenMenu(!openMenu)
-            }
+            onClick={() => setOpenMenu(!openMenu)}
             className="
               w-10 h-10
               rounded-full
@@ -150,7 +119,6 @@ export default function PostCard({
                 z-50
               "
             >
-              
               {/* EDIT */}
               <button
                 className="
@@ -163,7 +131,6 @@ export default function PostCard({
                 "
               >
                 <Pencil size={18} />
-
                 Edit Post
               </button>
 
@@ -179,7 +146,6 @@ export default function PostCard({
                 "
               >
                 <Trash2 size={18} />
-
                 Delete Post
               </button>
 
@@ -195,7 +161,6 @@ export default function PostCard({
                 "
               >
                 <Bookmark size={18} />
-
                 Save Post
               </button>
 
@@ -211,7 +176,6 @@ export default function PostCard({
                 "
               >
                 <Flag size={18} />
-
                 Report Post
               </button>
             </div>
@@ -224,11 +188,7 @@ export default function PostCard({
         <h1
           className={`
             font-bold text-white leading-tight
-            ${
-              details
-                ? "text-3xl md:text-4xl"
-                : "text-2xl md:text-3xl"
-            }
+            ${details ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}
           `}
         >
           {post.title}
@@ -241,9 +201,7 @@ export default function PostCard({
           className={`
             text-gray-300
             ${
-              details
-                ? "leading-9 text-lg"
-                : "leading-8 text-[15px] md:text-lg"
+              details ? "leading-9 text-lg" : "leading-8 text-[15px] md:text-lg"
             }
           `}
         >
@@ -253,7 +211,6 @@ export default function PostCard({
 
       {/* TAGS */}
       <div className="flex flex-wrap gap-3 px-5 py-6">
-        
         {post.tags?.map((tag, index) => (
           <div
             key={index}
@@ -274,63 +231,44 @@ export default function PostCard({
 
       {/* STATS */}
       <div className="flex items-center justify-between px-5 pt-3 pb-5 border-t border-white/10 text-gray-300">
-        
         {/* LEFT */}
         <div className="flex items-center gap-5">
-          
           {/* LIKE */}
           <div className="flex items-center gap-2">
-            
-            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
-              <ThumbsUp
-                size={18}
-                fill="currentColor"
-              />
+            <div className="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-blue-400">
+              <ThumbsUp size={18} fill="currentColor" />
             </div>
 
-            <span>
-              {post.reactions.likes}
-            </span>
+            <span>{post.reactions.likes}</span>
           </div>
 
           {/* DISLIKE */}
           <div className="flex items-center gap-2">
-            
             <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
-              <ThumbsDown
-                size={18}
-                fill="currentColor"
-              />
+              <ThumbsDown size={18} fill="currentColor" />
             </div>
 
-            <span>
-              {post.reactions.dislikes}
-            </span>
+            <span>{post.reactions.dislikes}</span>
           </div>
         </div>
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          
           {/* VIEWS */}
           <div className="flex items-center gap-2 text-gray-400">
             <Eye size={18} />
 
-            <span>
-              {post.views}
-            </span>
+            <span>{post.views}</span>
           </div>
 
           {/* BUTTON */}
           {!details && (
             <Link
-              href={`/${post.id}`}
+              href={`/post/${post.id}`}
               className="
                 px-4 py-2
                 rounded-xl
-                bg-gradient-to-r
-                from-blue-500
-                to-purple-600
+                bg-brand
                 text-white
                 text-sm
                 font-medium

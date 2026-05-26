@@ -1,8 +1,8 @@
-// app/component/Sidebar.js
-
 "use client";
 
 import Link from "next/link";
+
+import { useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
@@ -20,9 +20,33 @@ import {
 } from "lucide-react";
 
 export default function Sidebar() {
-
   const pathname = usePathname();
 
+  const [mounted, setMounted] = useState(false);
+
+  const [user, setUser] = useState(null);
+
+  /* LOAD USER */
+  useEffect(() => {
+    setMounted(true);
+
+    try {
+      const storedUser = localStorage.getItem("purpl-user");
+
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  /* PREVENT HYDRATION ERROR */
+  if (!mounted) {
+    return null;
+  }
+
+  /* MENU ITEMS */
   const menuItems = [
     {
       icon: <Home size={22} />,
@@ -57,7 +81,7 @@ export default function Sidebar() {
     {
       icon: <MessageCircle size={22} />,
       label: "Messages",
-      href: "/messages",
+      href: "/message",
     },
 
     {
@@ -92,7 +116,6 @@ export default function Sidebar() {
         pr-5
       "
     >
-      
       {/* PROFILE */}
       <div
         className="
@@ -105,42 +128,62 @@ export default function Sidebar() {
           mb-5
         "
       >
-        
-        {/* AVATAR */}
+        {/* USER IMAGE */}
         <div
           className="
             w-14 h-14
             rounded-full
-            bg-gradient-to-br
-            from-blue-500
-            via-indigo-500
-            to-purple-600
-            flex items-center justify-center
-            text-white
+            overflow-hidden
+            bg-brand
+            flex items-center
+            justify-center
+            shrink-0
           "
         >
-          <UserCircle2 size={34} />
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt={user.firstName}
+              className="
+                w-full
+                h-full
+                object-cover
+              "
+            />
+          ) : (
+            <UserCircle2 size={34} className="text-white" />
+          )}
         </div>
 
-        {/* INFO */}
-        <div>
-          <h2 className="text-white font-semibold text-lg">
-            Muntasir Resti
+        {/* USER INFO */}
+        <div className="overflow-hidden">
+          <h2
+            className="
+              text-white
+              font-semibold
+              text-lg
+              truncate
+            "
+          >
+            {user ? `${user.firstName} ${user.lastName}` : "Guest User"}
           </h2>
 
-          <p className="text-gray-400 text-sm">
-            @purpl_user
+          <p
+            className="
+              text-gray-400
+              text-sm
+              truncate
+            "
+          >
+            {user?.username ? `@${user.username}` : "@guest"}
           </p>
         </div>
       </div>
 
       {/* MENU */}
       <div className="space-y-2">
-        
         {menuItems.map((item, index) => {
-
-          const active =
-            pathname === item.href;
+          const active = pathname === item.href;
 
           return (
             <Link
@@ -159,7 +202,7 @@ export default function Sidebar() {
                     ? `
                       bg-gradient-to-r
                       from-purple-500/20
-                      to-blue-500/20
+                      to-brand/20
                       border-purple-500/30
                       text-white
                     `
@@ -174,22 +217,22 @@ export default function Sidebar() {
                 }
               `}
             >
-              
               {/* ICON */}
               <div
                 className={`
-                  ${
-                    active
-                      ? "text-white"
-                      : "text-purple-400"
-                  }
+                  ${active ? "text-white" : "text-blue-400"}
                 `}
               >
                 {item.icon}
               </div>
 
               {/* LABEL */}
-              <span className="text-[16px] font-medium">
+              <span
+                className="
+                  text-[16px]
+                  font-medium
+                "
+              >
                 {item.label}
               </span>
             </Link>

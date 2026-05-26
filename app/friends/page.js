@@ -16,22 +16,16 @@ import Sidebar from "../component/Sidebar";
 import { get } from "../lib/apiClient";
 
 async function getUsers() {
-
-  return await get(
-    "/users?limit=20",
-    {
-      revalidate: 60 * 5,
-    }
-  );
+  return await get("/users?limit=20", {
+    revalidate: 60 * 5,
+  });
 }
 
 export default async function FriendsPage() {
-
   const data = await getUsers();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#050816] via-[#0B1120] to-[#111827]">
-
       {/* MAIN CONTAINER */}
       <div
         className="
@@ -43,18 +37,14 @@ export default async function FriendsPage() {
           gap-8
         "
       >
-
         {/* SIDEBAR */}
         <Sidebar />
 
         {/* CONTENT */}
         <div className="flex-1">
-
           {/* TITLE */}
           <div className="mb-8">
-
             <div className="flex items-center gap-4">
-
               {/* ICON */}
               <div
                 className="
@@ -71,11 +61,7 @@ export default async function FriendsPage() {
 
               {/* TEXT */}
               <div>
-                <h1 className="text-4xl font-bold text-white">
-                  Friends
-                </h1>
-
-                
+                <h1 className="text-4xl font-bold text-white">Friends</h1>
               </div>
             </div>
           </div>
@@ -90,9 +76,7 @@ export default async function FriendsPage() {
               gap-6
             "
           >
-
             {data?.users?.map((user) => (
-
               <div
                 key={user.id}
                 className="
@@ -107,7 +91,6 @@ export default async function FriendsPage() {
                   transition-all duration-300
                 "
               >
-
                 {/* COVER */}
                 <div
                   className="
@@ -118,7 +101,6 @@ export default async function FriendsPage() {
 
                 {/* CONTENT */}
                 <div className="px-6 pb-6 relative">
-
                   {/* PROFILE IMAGE */}
                   <div
                     className="
@@ -130,25 +112,23 @@ export default async function FriendsPage() {
                       border-4 border-[#111827]
                       overflow-hidden
                       shadow-xl
-                      bg-blue-500
+                      bg-brand
                     "
                   >
-                   <img
-  src={user.image}
-  alt={user.firstName}
-  className="
+                    <img
+                      src={user.image}
+                      alt={user.firstName}
+                      className="
     w-full
     h-full
     object-cover
   "
-/>
+                    />
                   </div>
 
                   {/* USER INFO */}
                   <div className="pt-16">
-
                     <div className="flex items-start justify-between gap-3">
-
                       <div>
                         <h2 className="text-white text-2xl font-bold">
                           {user.firstName} {user.lastName}
@@ -172,58 +152,38 @@ export default async function FriendsPage() {
                         "
                       >
                         <UserCheck size={14} />
-
                         Active
                       </div>
                     </div>
 
                     {/* DETAILS */}
                     <div className="space-y-3 mt-5">
-
                       {/* COMPANY */}
                       <div className="flex items-center gap-3 text-gray-300">
+                        <Briefcase size={18} className="text-blue-400" />
 
-                        <Briefcase
-                          size={18}
-                          className="text-blue-400"
-                        />
-
-                        <span>
-                          {user.company?.title}
-                        </span>
+                        <span>{user.company?.title}</span>
                       </div>
 
                       {/* LOCATION */}
                       <div className="flex items-center gap-3 text-gray-300">
-
-                        <MapPin
-                          size={18}
-                          className="text-pink-400"
-                        />
+                        <MapPin size={18} className="text-pink-400" />
 
                         <span>
-                          {user.address?.city},{" "}
-                          {user.address?.state}
+                          {user.address?.city}, {user.address?.state}
                         </span>
                       </div>
 
                       {/* EMAIL */}
                       <div className="flex items-center gap-3 text-gray-300">
+                        <MessageCircle size={18} className="text-purple-400" />
 
-                        <MessageCircle
-                          size={18}
-                          className="text-purple-400"
-                        />
-
-                        <span className="truncate">
-                          {user.email}
-                        </span>
+                        <span className="truncate">{user.email}</span>
                       </div>
                     </div>
 
                     {/* ACTIONS */}
                     <div className="grid grid-cols-2 gap-3 mt-6">
-
                       {/* ADD FRIEND */}
                       <button
                         className="
@@ -237,7 +197,6 @@ export default async function FriendsPage() {
                         "
                       >
                         <UserPlus size={18} />
-
                         Add Friend
                       </button>
 
@@ -255,7 +214,6 @@ export default async function FriendsPage() {
                         "
                       >
                         <MessageCircle size={18} />
-
                         Message
                       </button>
                     </div>

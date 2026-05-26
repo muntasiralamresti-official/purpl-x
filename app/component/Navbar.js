@@ -50,15 +50,21 @@ export default function Navbar() {
 
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-3">
-            {/* SETTINGS */}
-            <button className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border border-black/30 flex items-center justify-center text-gray-300 hover:bg-black/70 hover:text-white transition-all">
+            {/* Message */}
+            <Link
+              href="/message"
+              className="w-11 h-11 rounded-full bg-brand border border-black/30 flex items-center justify-center text-gray-300 hover:text-white transition-all"
+            >
               <MessageCircleIcon size={25} />
-            </button>
+            </Link>
 
             {/* USER ICON */}
-            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-gray-300 font-semibold cursor-pointer ring-2 ring-purple-500/30 hover:text-white">
+            <Link
+              href="/login"
+              className="w-11 h-11 rounded-full bg-brand flex items-center justify-center text-gray-300 font-semibold cursor-pointer  hover:text-white"
+            >
               <User2 />
-            </div>
+            </Link>
           </div>
         </div>
 
