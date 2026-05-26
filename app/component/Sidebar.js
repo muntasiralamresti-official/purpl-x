@@ -117,7 +117,7 @@ export default function Sidebar() {
       "
     >
       {/* PROFILE */}
-      <div
+      <Link href="/profile"
         className="
           flex items-center gap-4
           p-4
@@ -178,7 +178,7 @@ export default function Sidebar() {
             {user?.username ? `@${user.username}` : "@guest"}
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* MENU */}
       <div className="space-y-2">
