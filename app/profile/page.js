@@ -1,4 +1,4 @@
-import { User2 } from "lucide-react";
+import { Briefcase, Calendar, Globe, GraduationCap, Mail, MapPin, Phone, User2 } from "lucide-react";
 import Image from "next/image";
 
 async function getUser() {
@@ -83,7 +83,7 @@ export default async function Profile() {
         </div>
 
         {/* CONTENT */}
-        <div className="grid lg:grid-cols-[350px_fr] gap-6">
+        <div className="grid lg:grid-cols-[350px_1fr] gap-6">
             {/* LEFT */}
             <div className="space-y-6">
                 {/* ABOUT */}
@@ -92,12 +92,95 @@ export default async function Profile() {
                 <div className="space-y-4">
                   <div className="flex gap-3">
                     <User2 size={18} className="text-secondary/60"/>
-                    <p className="text-primary/60">
+                    <p className="text-white/80 capitalize">
                         {user.gender}
                     </p>
                   </div>
+                  <div className="flex gap-3 ">
+                    <Mail size={18} className="text-brand"/>
+                    <p className="text-white/80">{user.email}</p>
+                  </div>
+                  <div className="flex gap-3 ">
+                    <Phone size={18} className="text-green-600"/>
+                    <p className="text-white/80">{user.phone}</p>
+                  </div>
+                  <div className="flex gap-3 ">
+                    <MapPin size={18} className="text-red-600"/>
+                    <p className="text-white/80">
+                    {user.address.city}, {" "} {user.address.state}
+                    </p>
+                  </div>
+                  <div className="flex gap-3 ">
+                    <Calendar size={18} className="text-yellow-400"/>
+                    <p className="text-white/80">Age: {user.age}</p>
+                  </div>
                 </div>
                 </div>
+
+                {/* Skills */}
+
+                <div className="border border-white/10 bg-primary/70 rounded-3xl backdrop-blur-xl p-6">
+                <h2 className="text-xl font-semibold text-white mb-5">Skills</h2>
+
+                <div className="flex flex-wrap gap-3">
+                  {["React", "Next.js", "Tailwind","WordPress", "UI Design", "Digital Marketing", ]
+                  .map((skill) => (
+                    <span key={skill} className="px-4 py-2 rounded-full bg-white/5 border-white/10 text-white/80 text-sm">{skill}</span>
+                  ))
+                  }
+                </div>
+                </div>
+            </div>
+
+            {/* Right */}
+
+            <div className="space-y-6">
+
+              {/* Bio */}
+              <div className="rounded-3xl border border-white/10 bg-primary/70 backdrop-blur-xl p-6">
+              <h2 className="text-2xl font-semibold text-white mb-4">Bio</h2>
+              <p className="text-white/90 leading-8">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+              </div>
+
+              {/* Experience */}
+              <div className="rounded-3xl border border-white/10 bg-primary/70 backdrop-blur-xl p-6">
+              <h2 className="text-2xl font-semibold text-white mb-5">Experience</h2>
+              <div className="space-y-5">
+                <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-secondary/40 flex items-center justify-center text-white">
+                <Briefcase size={20}/>
+                </div>
+
+                <div>
+                  <h3 className="text-white font-medium">Frontend Developer</h3>
+                  <p className="text-white/70 text-sm">Team-Y</p> 
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-brand/80 flex items-center justify-center text-white">
+                <GraduationCap size={20}/>
+                </div>
+
+                <div>
+                  <h3 className="text-white font-medium">Computer Science</h3>
+                  <p className="text-white/70 text-sm">University-Y</p> 
+                </div>
+              </div>
+
+               </div>
+              </div>
+
+              {/* Link */}
+              <div className="rounded-3xl border border-white/10 bg-primary/70 backdrop-blur-xl p-6">
+              <h2 className="text-2xl font-semibold text-white mb-5">Experience</h2>
+              <a href="https://muntasiralamresti.vercel.app/" target="_blank"
+              className="flex items-center gap-3 text-brand hover:text-white transition-all"
+              >
+                <Globe size={20}/>
+                muntasiralamresti.com
+              </a>
+              </div>
             </div>
         </div>
       </div>
