@@ -15,14 +15,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Purpl",
+  title: "Purpl-x",
 
   description:
     "Post Sharing Website",
 
   /* OPEN GRAPH */
   openGraph: {
-    title: "Purpl",
+    title: "Purpl-x",
 
     description:
       "Post Sharing Website",
@@ -41,12 +41,12 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
 
-    title: "Purpl",
+    title: "Purpl-x",
 
     description:
       "Post Sharing Website",
 
-    images: ["/purpl.png"],
+    images: ["/purpl-x-logo.png"],
   },
 };
 

@@ -60,11 +60,11 @@ export default function NotFound() {
         <h1
           className="
             text-7xl
-            font-black
+            font-primary
             text-transparent
             bg-clip-text
             bg-gradient-to-r
-            from-purple-400
+            from-secondary/80
             to-blue-400
             mb-4
           "

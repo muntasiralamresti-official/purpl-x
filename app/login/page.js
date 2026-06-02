@@ -64,10 +64,7 @@ export default function LoginPage() {
         flex
         items-center
         justify-center
-        bg-gradient-to-br
-        from-[#050816]
-        via-[#0B1120]
-        to-[#111827]
+        bg-white
         px-4
       "
     >
@@ -77,6 +74,8 @@ export default function LoginPage() {
             relative
             px-6
             py-10
+            border
+            border-2
             bg-white
             shadow-2xl
             rounded-3xl
@@ -118,8 +117,8 @@ export default function LoginPage() {
                     px-4
                     py-3
                     text-sm
-                    border-black/40
-                    text-black
+                    border-primary/40
+                    text-primary
                   "
                 />
               </div>
@@ -151,8 +150,8 @@ export default function LoginPage() {
                     px-4
                     py-3
                     text-sm
-                    border-black/40
-                    text-black
+                    border-primary/40
+                    text-primary
                   "
                 />
               </div>

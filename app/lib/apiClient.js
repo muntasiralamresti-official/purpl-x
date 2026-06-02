@@ -1,10 +1,6 @@
-// lib/apiClient.js
-
 const BASE_URL = "https://dummyjson.com";
 
-/* =====================================
-   REQUEST FUNCTION
-===================================== */
+// REQUEST FUNCTION
 
 async function request(
   endpoint,
@@ -13,7 +9,7 @@ async function request(
     body = null,
     headers = {},
     cache = "force-cache",
-    revalidate = false,
+    revalidate = false, 
     tags = [],
   } = {}
 ) {
@@ -29,14 +25,14 @@ async function request(
       cache,
 
       next: revalidate
-        ? {
-            revalidate,
-            tags,
-          }
-        : undefined,
+      ? {
+        revalidate,
+        tags,
+      }
+      : undefined,
     };
 
-    /* BODY */
+    // Body
     if (body) {
       options.body = JSON.stringify(body);
     }
@@ -46,7 +42,7 @@ async function request(
       options
     );
 
-    /* ERROR */
+    // error
     if (!response.ok) {
       throw new Error(
         `Request Failed: ${response.status}`
@@ -56,7 +52,7 @@ async function request(
     return await response.json();
   } catch (error) {
     console.error(
-      "API CLIENT ERROR:",
+      "ÄPI CLIENT ERROR:",
       error.message
     );
 
@@ -65,11 +61,10 @@ async function request(
       message: error.message,
     };
   }
+  
 }
 
-/* =====================================
-   GET
-===================================== */
+// GET
 
 export async function get(
   endpoint,
@@ -81,14 +76,12 @@ export async function get(
   });
 }
 
-/* =====================================
-   POST
-===================================== */
+// Post
 
 export async function post(
   endpoint,
   body,
-  options = {}
+  options ={}
 ) {
   return request(endpoint, {
     method: "POST",
@@ -98,9 +91,7 @@ export async function post(
   });
 }
 
-/* =====================================
-   PUT
-===================================== */
+// PUT
 
 export async function put(
   endpoint,
@@ -115,9 +106,7 @@ export async function put(
   });
 }
 
-/* =====================================
-   PATCH
-===================================== */
+// PATCH
 
 export async function patch(
   endpoint,
@@ -132,9 +121,7 @@ export async function patch(
   });
 }
 
-/* =====================================
-   DELETE
-===================================== */
+// Delete
 
 export async function remove(
   endpoint,
@@ -147,14 +134,12 @@ export async function remove(
   });
 }
 
-/* =====================================
-   DEFAULT EXPORT
-===================================== */
+// Default export
 
 const apiClient = {
   request,
   get,
- post,
+  post,
   put,
   patch,
   remove,

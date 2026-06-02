@@ -41,7 +41,7 @@ export default function Sidebar() {
     }
   }, []);
 
-  /* PREVENT HYDRATION ERROR */
+  /* PREVENT HYDRATION */
   if (!mounted) {
     return null;
   }
@@ -57,7 +57,7 @@ export default function Sidebar() {
     {
       icon: <Users size={22} />,
       label: "Friends",
-      href: "/friends",
+      href: "/people",
     },
 
     {
@@ -107,31 +107,37 @@ export default function Sidebar() {
     <aside
       className="
         hidden lg:block
-        w-[300px]
+        w-[340px]
         sticky
-        top-[100px]
-        h-[calc(100vh-120px)]
+        top-[95px]
+        h-[calc(100vh-110px)]
+        bg-white
+        rounded-2xl
+        shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+        p-4
         overflow-y-auto
         shrink-0
-        pr-5
       "
     >
       {/* PROFILE */}
-      <Link href="/profile"
+      <Link
+        href="/profile"
         className="
           flex items-center gap-4
           p-4
           rounded-3xl
-          bg-white/5
-          border border-white/10
-          backdrop-blur-xl
+          bg-[#f5f5f7]
+          border border-primary/20
+          shadow-sm
           mb-5
+          transition-all
+          hover:bg-[#eeeeef]
         "
       >
         {/* USER IMAGE */}
         <div
           className="
-            w-14 h-14
+            w-16 h-16
             rounded-full
             overflow-hidden
             bg-brand
@@ -151,7 +157,7 @@ export default function Sidebar() {
               "
             />
           ) : (
-            <UserCircle2 size={34} className="text-white" />
+            <UserCircle2 size={38} className="text-white" />
           )}
         </div>
 
@@ -159,9 +165,10 @@ export default function Sidebar() {
         <div className="overflow-hidden">
           <h2
             className="
-              text-white
-              font-semibold
-              text-lg
+              text-primary
+              font-bold
+              text-2xl
+              leading-tight
               truncate
             "
           >
@@ -170,9 +177,10 @@ export default function Sidebar() {
 
           <p
             className="
-              text-gray-400
-              text-sm
+              text-[#6e6e73]
+              text-base
               truncate
+              mt-1
             "
           >
             {user?.username ? `@${user.username}` : "@guest"}
@@ -181,7 +189,7 @@ export default function Sidebar() {
       </Link>
 
       {/* MENU */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {menuItems.map((item, index) => {
           const active = pathname === item.href;
 
@@ -191,28 +199,26 @@ export default function Sidebar() {
               href={item.href}
               className={`
                 w-full
-                flex items-center gap-4
-                px-5 py-4
-                rounded-2xl
+                flex items-center gap-5
+                px-6 py-5
+                rounded-[22px]
                 border
                 transition-all duration-300
 
                 ${
                   active
                     ? `
-                      bg-gradient-to-r
-                      from-purple-500/20
-                      to-brand/20
-                      border-purple-500/30
+                      bg-brand
+                      border-brand/50
                       text-white
+                      shadow-md
                     `
                     : `
-                      bg-white/5
-                      border-transparent
-                      text-gray-300
-                      hover:border-purple-500/30
-                      hover:bg-white/10
-                      hover:text-white
+                      bg-[#f5f5f7]
+                      border-primary/20
+                      text-[#1d1d1f]
+                      hover:bg-[#ebebee]
+                      hover:border-primary/30
                     `
                 }
               `}
@@ -220,7 +226,7 @@ export default function Sidebar() {
               {/* ICON */}
               <div
                 className={`
-                  ${active ? "text-white" : "text-blue-400"}
+                  ${active ? "text-white" : "text-brand"}
                 `}
               >
                 {item.icon}
@@ -229,7 +235,7 @@ export default function Sidebar() {
               {/* LABEL */}
               <span
                 className="
-                  text-[16px]
+                  text-[18px]
                   font-medium
                 "
               >

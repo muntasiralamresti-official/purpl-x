@@ -1,8 +1,10 @@
 import { User } from "lucide-react";
 import Sidebar from "../component/Sidebar";
+import { get } from "../lib/apiClient";
+import Image from "next/image";
 
 async function getUsers() {
-    return await get("/users?limit=80",{
+    return await get ("/users?limit=80",{
         revalidate: 60 * 5,
     });
 }
@@ -37,17 +39,17 @@ export default async function FriendsPage(){
                     {/* Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                         {data?.users?.map((user) => (
-                            <div key={user.id} className="bg-white rounded-2xl overflow-hidden border border-primary/30 shadow-sm hover:shadow-xl transition-all duration-300">
+                            <div key={user.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                                {/* Image */}
                                <div className="h-40 overflow-hidden">
-                                <image src={user.image} alt={user.firstName} width={fit} height={fit} className="transition-all duration-500 hover:scale-105"/>
+                                <Image src={user.image} alt={user.firstName} width={300} height={200} className="transition-all duration-500 hover:scale-105"/>
                                </div>
 
                                {/* Content */}
 
-                               <div className="px-5 pb-5 text-center">
+                               <div className="px-5 py-5 text-start">
                                 <h2 className="text-xl font-bold text-primary truncate">{user.firstName}{user.lastName}</h2>
-                                <p className="text-sm text-primary/60 mt-1">{user.id} % 40 + 6 mutual friends</p>
+                                <p className="text-sm text-primary/60 mt-1">{user.id % 40 + 6} mutual friends</p>
 
 
                                 {/* Buttons */}
@@ -65,3 +67,6 @@ export default async function FriendsPage(){
         </main>
     )
 }
+
+
+//Update Next:- Usable Add Friend and Remove Button
