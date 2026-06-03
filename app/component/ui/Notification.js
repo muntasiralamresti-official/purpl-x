@@ -186,7 +186,7 @@ export default function NotificationBell() {
               notifications.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-primary/5 transition-all cursor-pointer"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-primary/50 transition-all cursor-pointer"
                 >
                   <Image
                     src={item.avatar}

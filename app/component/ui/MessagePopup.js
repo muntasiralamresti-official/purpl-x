@@ -16,7 +16,7 @@ export default function MessagePopup(){
       id: 1,
       name: "Elias Sir",
       image: "/elias.jpg",
-      message: "Kalke class hobe na...",
+      message: "Ajke class hobe na...",
       time: "2m",
       unread: 2,
     },

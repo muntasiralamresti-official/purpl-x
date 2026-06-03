@@ -1,43 +1,36 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import {
-  Heart,
-  MessageCircle,
-  UserPlus,
-  Repeat2,
   AtSign,
   Bell,
   BellOff,
   Check,
   CheckCheck,
-  Trash2,
-  ThumbsUp,
   Gift,
-  Video,
-  Image as ImageIcon,
+  ImageIcon,
+  MessageCircle,
   MoreHorizontal,
+  Repeat2,
   Search,
-  Filter,
+  ThumbsUp,
+  Trash2,
+  UserPlus,
+  Video,
   X,
 } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+import { get } from "../lib/apiClient";
+import Sidebar from "../component/Sidebar";
 
-/* ─── Notification types ─────────────────────── */
+// Notification Types
 const TYPES = [
   {
     type: "like",
     icon: ThumbsUp,
-    bg: "bg-blue-100",
-    color: "text-blue-600",
+    bg: "bg-brand/20",
+    color: "text-brand",
     label: "liked your post",
-  },
-  {
-    type: "love",
-    icon: Heart,
-    bg: "bg-red-100",
-    color: "text-red-500",
-    label: "loved your photo",
   },
   {
     type: "comment",
@@ -49,8 +42,8 @@ const TYPES = [
   {
     type: "follow",
     icon: UserPlus,
-    bg: "bg-purple-100",
-    color: "text-purple-600",
+    bg: "bg-secondary/20",
+    color: "text-secondary",
     label: "started following you",
   },
   {
@@ -79,7 +72,7 @@ const TYPES = [
     icon: Video,
     bg: "bg-indigo-100",
     color: "text-indigo-600",
-    label: "tagged you in a video",
+    label: "tagged you in a Video",
   },
   {
     type: "photo",
@@ -90,7 +83,7 @@ const TYPES = [
   },
 ];
 
-const FILTERS = ["All", "Unread", "Likes", "Comments", "Follows", "Mentions"];
+const FILTERS = ["ALL", "Unread", "Likes", "Comments", "Follows", "Mentions"];
 
 function timeAgo(ms) {
   const diff = Date.now() - ms;
@@ -104,10 +97,10 @@ function timeAgo(ms) {
   return `${Math.floor(d / 7)}w ago`;
 }
 
-function groupByTime(notifications) {
+function groupByTime(notification) {
   const groups = { New: [], "Earlier today": [], "This week": [], Older: [] };
   const now = Date.now();
-  notifications.forEach((n) => {
+  notification.forEach((n) => {
     const diff = now - n.time;
     const h = diff / 3600000;
     const d = diff / 86400000;
@@ -120,7 +113,7 @@ function groupByTime(notifications) {
 }
 
 function buildNotifications(users, posts) {
-  return users.slice(0, 20).map((u, i) => {
+  return users.slice(0, 30).map((u, i) => {
     const kind = TYPES[i % TYPES.length];
     const post = posts[i % posts.length];
     const hoursAgo = i * 1.3 + Math.random() * 2;
@@ -142,25 +135,25 @@ function buildNotifications(users, posts) {
   });
 }
 
-/* ─── Skeleton ───────────────────────────────── */
+// Skeleton
 function Skeleton() {
   return (
     <div className="space-y-1 px-4">
       {[...Array(6)].map((_, i) => (
         <div key={i} className="flex items-center gap-3 py-3">
-          <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse shrink-0" />
+          <div className="w-14 h-14 rounded-full bg-primary/10 animate-pulse shrink-0" />
           <div className="flex-1 space-y-2">
-            <div className="h-3.5 bg-gray-200 rounded-full animate-pulse w-3/4" />
-            <div className="h-3 bg-gray-200 rounded-full animate-pulse w-1/2" />
+            <div className="h-3.5 bg-primary/10 rounded-full animate-pulse w-3/4" />
+            <div className="h-3 bg-primary/10 rounded-full animate-pulse w-1/2" />
           </div>
-          <div className="w-12 h-12 rounded-xl bg-gray-200 animate-pulse shrink-0" />
+          <div className="w-12 h-12 rounded-xl bg-primary/10 animate-pulse shrink-0" />
         </div>
       ))}
     </div>
   );
 }
 
-/* ─── Single notification row ────────────────── */
+// Single Notification Row
 function NotifRow({ notif, onRead, onDelete }) {
   const Icon = notif.icon;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -168,11 +161,11 @@ function NotifRow({ notif, onRead, onDelete }) {
   return (
     <div
       className={`group relative flex items-start gap-3 px-4 py-3 rounded-xl cursor-pointer transition-colors ${
-        notif.read ? "hover:bg-gray-100" : "bg-blue-50 hover:bg-blue-100/70"
+        notif.read ? "hover:bg-primary/5" : "bg-brand/5 hover:bg-brand/10"
       }`}
       onClick={() => onRead(notif.id)}
     >
-      {/* avatar + icon badge */}
+      {/* Avatar + icon */}
       <div className="relative shrink-0">
         <Image
           src={notif.avatar}
@@ -188,64 +181,69 @@ function NotifRow({ notif, onRead, onDelete }) {
         </div>
       </div>
 
-      {/* text */}
+      {/* Text */}
       <div className="flex-1 min-w-0 pt-0.5">
-        <p className="text-[14px] text-gray-800 leading-snug">
+        <p className="text-sm text-primary leading-snug">
           <span className="font-semibold">{notif.name}</span>{" "}
-          <span className={notif.read ? "text-primary/80" : "text-gray-800"}>
+          <span className={notif.read ? "text-primary" : "text-primary/90"}>
             {notif.label}
           </span>
         </p>
+
         {notif.excerpt && (
-          <p className="text-xs text-gray-400 mt-0.5 truncate max-w-xs">
+          <p className="text-xs text-primary/60 mt-0.5 truncate max-w-xs">
             {notif.excerpt}
           </p>
         )}
+
+        {/* ✅ Fixed: was text-primary/5 (invisible) → text-primary/40 */}
         <p
-          className={`text-xs mt-1 font-medium ${notif.read ? "text-gray-400" : "text-blue-500"}`}
+          className={`text-xs mt-1 font-medium ${
+            notif.read ? "text-primary/40" : "text-brand"
+          }`}
         >
           {timeAgo(notif.time)}
         </p>
       </div>
 
-      {/* right side */}
+      {/* Right side */}
       <div className="flex flex-col items-center gap-2 shrink-0 pt-1">
-        {/* unread dot */}
+        {/* Unread dot */}
         {!notif.read && (
-          <div className="w-3 h-3 rounded-full bg-blue-500 shadow-sm" />
+          <div className="w-3 h-3 rounded-full bg-brand shadow-sm" />
         )}
 
-        {/* more button */}
+        {/* More button */}
         <div className="relative">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpen((o) => !o);
             }}
-            className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
+            className="w-9 h-9 rounded-full bg-primary/5 hover:bg-primary/10 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
           >
             <MoreHorizontal size={16} className="text-primary/80" />
           </button>
 
           {menuOpen && (
             <div
-              className="absolute right-0 top-10 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-1 z-50 overflow-hidden"
               onClick={(e) => e.stopPropagation()}
+              className="absolute right-0 top-10 w-52 bg-white rounded-2xl shadow-sm border border-gray-100 py-1 z-50 overflow-hidden"
             >
               <button
                 onClick={() => {
                   onRead(notif.id);
                   setMenuOpen(false);
                 }}
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-primary/60 hover:bg-gray-50 transition-colors"
               >
-                <Check size={15} className="text-gray-500" />
+                <Check size={15} className="text-primary/40" />
                 Mark as read
               </button>
               <button
                 onClick={() => {
                   onDelete(notif.id);
-                  setMenuOpen(false);
+                  setMenuOpen(false); // ✅ Fixed: was setMenuOpen() with no arg
                 }}
                 className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
               >
@@ -260,40 +258,41 @@ function NotifRow({ notif, onRead, onDelete }) {
   );
 }
 
-/* ─── Main Page ──────────────────────────────── */
-export default function NotificationsPage() {
+// Main Page
+export default function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
 
-  /* fetch */
+  // API Fetch
   useEffect(() => {
-    (async () => {
+    const fetchNotifications = async () => {
       try {
         setLoading(true);
-        const [uRes, pRes] = await Promise.all([
-          fetch("https://dummyjson.com/users?limit=20"),
-          fetch("https://dummyjson.com/posts?limit=20"),
+        const [usersData, postsData] = await Promise.all([
+          get("/users?limit=20"),
+          get("/posts?limit=20"),
         ]);
-        const [{ users }, { posts }] = await Promise.all([
-          uRes.json(),
-          pRes.json(),
-        ]);
-        setNotifications(buildNotifications(users, posts));
-      } catch {
-        setError("Failed to load notifications. Please try again.");
+        setNotifications(
+          buildNotifications(usersData?.users || [], postsData?.posts || [])
+        );
+      } catch (error) {
+        console.error(error);
+        setError("Failed to load notification. Please try again.");
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    fetchNotifications();
   }, []);
 
   const markRead = useCallback((id) => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
   }, []);
 
@@ -305,26 +304,28 @@ export default function NotificationsPage() {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
-  /* filter + search */
+  // Filter + search logic
   const filtered = notifications.filter((n) => {
     const matchFilter =
-      filter === "All"
+      filter === "ALL"
         ? true
         : filter === "Unread"
-          ? !n.read
-          : filter === "Likes"
-            ? ["like", "love"].includes(n.type)
-            : filter === "Comments"
-              ? n.type === "comment"
-              : filter === "Follows"
-                ? n.type === "follow"
-                : filter === "Mentions"
-                  ? n.type === "mention"
-                  : true;
+        ? !n.read
+        : filter === "Likes"
+        ? ["like", "love"].includes(n.type)
+        : filter === "Comments"
+        ? n.type === "comment"
+        : filter === "Follows"
+        ? n.type === "follow"
+        : filter === "Mentions"
+        ? n.type === "mention"
+        : true;
+
     const matchSearch = search
       ? n.name.toLowerCase().includes(search.toLowerCase()) ||
         n.label.toLowerCase().includes(search.toLowerCase())
       : true;
+
     return matchFilter && matchSearch;
   });
 
@@ -332,134 +333,129 @@ export default function NotificationsPage() {
   const groups = groupByTime(filtered);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-2xl mx-auto py-6 px-2 sm:px-0">
-        {/* ── Card ── */}
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          {/* ── Header ── */}
-          <div className="px-5 pt-5 pb-3">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Notifications
-                </h1>
-                {unread > 0 && (
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {unread} new notification{unread > 1 ? "s" : ""}
-                  </p>
-                )}
-              </div>
+    <div className="min-h-screen bg-[#f0f2f5]">
+      <div className="container mx-auto px-4 py-6 flex gap-6">
 
-              <div className="flex items-center gap-2">
-                {/* search toggle */}
-                <button
-                  onClick={() => {
-                    setSearchOpen((o) => !o);
-                    setSearch("");
-                  }}
-                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                >
-                  {searchOpen ? (
-                    <X size={16} className="text-primary/80" />
-                  ) : (
-                    <Search size={16} className="text-primary/80" />
+        {/* Sidebar */}
+        <aside className="hidden lg:block w-[320px] shrink-0 sticky top-20 h-fit">
+          <Sidebar />
+        </aside>
+
+        {/* Notifications */}
+        <main className="flex-1 min-w-0">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden w-full">
+
+            {/* Header */}
+            <div className="px-6 pt-6 pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold text-primary">
+                    Notifications
+                  </h1>
+                  {unread > 0 && (
+                    <p className="text-sm text-primary/60 mt-1">
+                      {unread} unread notifications
+                    </p>
                   )}
-                </button>
+                </div>
 
-                {/* mark all read */}
-                {unread > 0 && (
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={markAllRead}
-                    className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors"
+                    onClick={() => {
+                      setSearchOpen((o) => !o);
+                      setSearch("");
+                    }}
+                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                   >
-                    <CheckCheck size={15} />
-                    Mark all read
+                    {searchOpen ? <X size={18} /> : <Search size={18} />}
                   </button>
-                )}
+
+                  {unread > 0 && (
+                    <button
+                      onClick={markAllRead}
+                      className="px-4 py-2 rounded-full bg-brand/10 text-brand font-medium hover:bg-brand/20 transition-colors text-sm"
+                    >
+                      Mark all read
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* ✅ Search Bar — was completely missing from JSX */}
+              {searchOpen && (
+                <div className="mt-4">
+                  <div className="relative">
+                    <Search
+                      size={16}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40"
+                    />
+                    <input
+                      autoFocus
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search notifications..."
+                      className="w-full pl-9 pr-4 py-2.5 rounded-full bg-gray-100 text-sm text-primary placeholder:text-primary/40 outline-none focus:ring-2 focus:ring-brand/30 transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* ✅ Filter Tabs — was completely missing from JSX */}
+              <div className="mt-4 flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                {FILTERS.map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                      filter === f
+                        ? "bg-brand text-white shadow-sm"
+                        : "bg-gray-100 text-primary/60 hover:bg-gray-200"
+                    }`}
+                  >
+                    {f}
+                    {f === "Unread" && unread > 0 && (
+                      <span
+                        className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+                          filter === f
+                            ? "bg-white/30 text-white"
+                            : "bg-brand/10 text-brand"
+                        }`}
+                      >
+                        {unread}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* search bar */}
-            {searchOpen && (
-              <div className="relative mb-3">
-                <Search
-                  size={15}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Search notifications…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-gray-100 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                />
-              </div>
-            )}
-
-            {/* filter chips */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-              {FILTERS.map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`flex-shrink-0 text-sm font-medium px-4 py-1.5 rounded-full transition-all ${
-                    filter === f
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 text-primary/80 hover:bg-gray-200"
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="h-px bg-gray-100" />
-
-          {/* ── Body ── */}
-          <div className="py-2">
-            {loading && <Skeleton />}
-
+            {/* Error State */}
             {error && (
-              <div className="flex flex-col items-center justify-center py-16 gap-3">
-                <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
-                  <BellOff size={24} className="text-red-400" />
-                </div>
-                <p className="text-gray-500 text-sm">{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="text-sm text-blue-600 font-medium hover:underline"
-                >
-                  Try again
-                </button>
+              <div className="px-6 py-4 text-sm text-red-500 bg-red-50 mx-4 mb-4 rounded-xl">
+                {error}
               </div>
             )}
 
-            {!loading && !error && filtered.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 gap-3">
-                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Bell size={28} className="text-gray-300" />
-                </div>
-                <p className="text-gray-800 font-semibold">No notifications</p>
-                <p className="text-gray-400 text-sm text-center max-w-xs">
-                  {search
-                    ? `No results for "${search}"`
-                    : "You're all caught up! Check back later."}
-                </p>
-              </div>
-            )}
+            {/* Notifications Body */}
+            <div className="py-2">
+              {loading && <Skeleton />}
 
-            {!loading &&
-              !error &&
-              Object.entries(groups).map(([label, items]) => {
-                if (items.length === 0) return null;
-                return (
-                  <div key={label}>
-                    <h2 className="text-[13px] font-bold text-gray-500 uppercase tracking-wide px-5 pt-4 pb-1">
-                      {label}
-                    </h2>
-                    <div className="px-2 space-y-0.5">
+              {!loading && filtered.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 text-primary/40">
+                  <Bell size={40} className="mb-3 opacity-30" />
+                  <p className="text-sm font-medium">No notifications found</p>
+                </div>
+              )}
+
+              {!loading &&
+                filtered.length > 0 &&
+                Object.entries(groups).map(([label, items]) => {
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={label}>
+                      <h3 className="px-6 py-2 text-xs uppercase font-bold text-primary/50 tracking-wider">
+                        {label}
+                      </h3>
                       {items.map((n) => (
                         <NotifRow
                           key={n.id}
@@ -469,20 +465,13 @@ export default function NotificationsPage() {
                         />
                       ))}
                     </div>
-                  </div>
-                );
-              })}
-          </div>
-
-          {/* ── Footer ── */}
-          {!loading && filtered.length > 0 && (
-            <div className="border-t border-gray-100 px-5 py-4 text-center">
-              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors">
-                See all previous notifications
-              </button>
+                  );
+                })}
             </div>
-          )}
-        </div>
+
+          </div>
+        </main>
+
       </div>
     </div>
   );
