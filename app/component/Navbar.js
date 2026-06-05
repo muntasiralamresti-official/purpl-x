@@ -52,7 +52,7 @@ export default function Navbar() {
               width={160}
               height={40}
               alt="Purpl Logo"
-              className="object-contain"
+              className="object-contain w-[90px] sm:w-[140px] md:w-[160px]"
             />
           </Link>
 
@@ -119,55 +119,14 @@ export default function Navbar() {
           >
             {/* Notification */}
 
-            {/* <Notification className=" w-11 h-11 rounded-full"/> */}
             <Notification />
-            {/* MESSAGE */}
-            {/* <Link
-              href="/message"
-              className="
-                w-11
-                h-11
-                rounded-full
-                bg-[#4285f4]
-                border
-                border-primary/10
-                flex
-                items-center
-                justify-center
-                text-white
-                hover:scale-105
-                transition-all
-                shadow-sm
-              "
-            >
 
-              <MessageCircleIcon
-                size={23}
-              />
-            </Link> */}
+            {/* Message */}
+            
             <MessagePopup />
 
             {/* USER */}
-            {/* <Link
-              href="/login"
-              className="
-                w-11
-                h-11
-                rounded-full
-                bg-[#4285f4]
-                flex
-                items-center
-                justify-center
-                text-white
-                cursor-pointer
-                hover:scale-105
-                transition-all
-                shadow-sm
-              "
-            >
-
-              <User2 size={22} />
-            </Link> */}
+            
             <ProfilePopup />
           </div>
         </div>
