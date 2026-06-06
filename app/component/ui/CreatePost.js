@@ -191,9 +191,9 @@ export function CreatePost({ onPostCreated }) {
             {filePreview && (
               <div className="relative mt-2 rounded-2xl overflow-hidden bg-primary/30">
                 {fileType === "video" ? (
-                  <video src={filePreview} controls className="w-full max-h-64 object-cover rounded-2xl" />
+                  <video src={filePreview} controls className="w-full max-h-full object-cover rounded-2xl" />
                 ) : (
-                  <img src={filePreview} alt="Preview" className="w-full max-h-64 object-cover rounded-2xl" />
+                  <img src={filePreview} alt="Preview" className="w-full max-h-full object-cover rounded-2xl" />
                 )}
                 <div className="absolute bottom-2 left-2 text-xs text-white/80 bg-primary/50 rounded-lg px-2 py-1 backdrop-blur-2xl capitalize">
                   {fileType === "image" ? "Image" : "Video"} · {file?.name}

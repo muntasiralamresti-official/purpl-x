@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  CheckCheck,
-  ImageIcon,
-  Info,
-  Mic,
-  Phone,
-  Search,
-  Send,
-  Smile,
-  Video,
-  ArrowLeft,
-} from "lucide-react";
+import {CheckCheck, ImageIcon, Info, Mic, Phone, Search, Send, Smile, Video, ArrowLeft} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 

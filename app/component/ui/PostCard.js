@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  Bookmark,
-  Eye,
-  Flag,
-  Globe,
-  MoreHorizontal,
-  Pencil,
-  ThumbsDown,
-  ThumbsUp,
-  Trash2,
-  UserCircle,
-} from "lucide-react";
+import { Bookmark,Eye, Flag, Globe, MoreHorizontal, Pencil, ThumbsDown, ThumbsUp, Trash2, UserCircle,} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -108,13 +97,13 @@ export default function PostCard({ post, details = false }) {
                 src={post.mediaPreview}
                 controls
                 playsInline
-                className="w-full max-h-48 xs:max-h-56 sm:max-h-72 object-cover"
+                className="w-full max-h-full  object-cover"
               />
             ) : (
               <img
                 src={post.mediaPreview}
                 alt="post media"
-                className="w-full max-h-48 xs:max-h-56 sm:max-h-72 object-cover"
+                className="w-full max-h-full object-cover"
               />
             )}
           </div>

@@ -1,23 +1,6 @@
 "use client";
 
-import {
-  AtSign,
-  Bell,
-  BellOff,
-  Check,
-  CheckCheck,
-  Gift,
-  ImageIcon,
-  MessageCircle,
-  MoreHorizontal,
-  Repeat2,
-  Search,
-  ThumbsUp,
-  Trash2,
-  UserPlus,
-  Video,
-  X,
-} from "lucide-react";
+import {AtSign, Bell, BellOff, Check, CheckCheck,Gift, ImageIcon, MessageCircle, MoreHorizontal, Repeat2, Search, ThumbsUp, Trash2, UserPlus, Video, X,} from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { get } from "../lib/apiClient";

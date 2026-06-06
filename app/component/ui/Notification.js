@@ -1,13 +1,7 @@
 "use client";
 
 import { get } from "@/app/lib/apiClient";
-import {
-  Bell,
-  Heart,
-  MessageCircle,
-  UserPlus,
-  X,
-} from "lucide-react";
+import { Bell, Heart,MessageCircle, UserPlus, X,} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";

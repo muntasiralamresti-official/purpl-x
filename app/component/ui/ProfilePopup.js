@@ -2,14 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import {
-  Settings,
-  Bookmark,
-  Users,
-  LogOut,
-  ChevronRight,
-  Loader2,
-} from "lucide-react";
+import { Settings, Bookmark, Users, LogOut, ChevronRight, Loader2} from "lucide-react";
+import { get } from "@/app/lib/apiClient";
 
 export default function ProfilePopup() {
   const [open, setOpen] = useState(false);
@@ -19,18 +13,21 @@ export default function ProfilePopup() {
   const popupRef = useRef(null);
 
   useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await fetch("https://dummyjson.com/users/1");
-        const data = await res.json();
+  async function fetchUser() {
+    try {
+      const data = await get("/users/1");
+
+      if (data?.id) {
         setUser(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    } finally {
+      setLoading(false);
     }
-    fetchUser();
+  }
+
+   fetchUser();
   }, []);
 
   useEffect(() => {
