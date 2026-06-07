@@ -6,18 +6,7 @@ import { useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
-import {
-  Users,
-  LayoutDashboard,
-  Clock3,
-  Bookmark,
-  MessageCircle,
-  UserCircle2,
-  Home,
-  Bell,
-  Settings,
-  Images,
-} from "lucide-react";
+import { Users, LayoutDashboard, Clock3, Bookmark, MessageCircle, UserCircle2, Home, Bell, Settings, Images,} from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
