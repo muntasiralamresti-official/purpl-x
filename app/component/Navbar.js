@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { MessageCircleIcon, Search, User2 } from "lucide-react";
+import { Search,} from "lucide-react";
 
 import Link from "next/link";
 
@@ -16,37 +16,14 @@ export default function Navbar() {
 
   return (
     <nav
-      className="
-        w-full
-        sticky
-        top-0
-        z-50
-        border-b
-        border-primary/10
-        bg-white
-        backdrop-blur-xl
-        shadow-sm
-      "
-    >
+      className=" w-full sticky top-0 z-50  border-b border-primary/10 bg-white backdrop-blur-xl shadow-sm " >
       <div className="container mx-auto px-4 lg:px-6">
         <div
-          className="
-            h-20
-            flex
-            items-center
-            justify-between
-          "
-        >
+          className=" h-20 flex items-center justify-between " >
           {/* LOGO */}
           <Link
             href="/"
-            className="
-              flex
-              items-center
-              gap-3
-              cursor-pointer
-            "
-          >
+            className=" flex items-center gap-3 cursor-pointer  " >
             <Image
               src="/purpl-x-logo.png"
               width={160}
@@ -57,76 +34,29 @@ export default function Navbar() {
           </Link>
 
           {/* SEARCH */}
-          <div
-            className="
-              hidden md:flex
-              flex-1
-              justify-center
-              px-6
-            "
-          >
-            <div
-              className="
-                relative
-                w-full
-                max-w-xl
-              "
-            >
-              <Search
-                size={18}
-                className="
-                  absolute
-                  left-4
-                  top-1/2
-                  -translate-y-1/2
-                  text-primary/40
-                "
-              />
+          <div className="  hidden md:flex flex-1 justify-center px-6  " >
+            <div className=" relative w-full max-w-xl " >
+              <Search size={18} className=" absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 " />
 
-              <input
-                type="text"
-                placeholder="Search posts..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="
-                  w-full
-                  bg-[#f5f5f7]
-                  border
-                  border-primary/10
-                  rounded-full
-                  pl-11
-                  pr-4
-                  py-3
-                  text-sm
-                  text-primary
-                  placeholder:text-primary/40
-                  outline-none
-                  focus:border-[#4285f4]
-                  focus:bg-white
-                  transition-all
-                "
+              <input type="text" placeholder="Search posts..." value={search} onChange={(e) => setSearch(e.target.value)}
+                className=" w-full bg-White/80 border border-primary/10 rounded-full pl-11 pr-4 py-3  text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand focus:bg-white transition-all "
               />
             </div>
           </div>
 
           {/* RIGHT SIDE */}
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-            "
-          >
+
+          <div className=" flex items-center gap-3 ">
             {/* Notification */}
 
             <Notification />
 
             {/* Message */}
-            
+
             <MessagePopup />
 
             {/* USER */}
-            
+
             <ProfilePopup />
           </div>
         </div>
@@ -134,36 +64,10 @@ export default function Navbar() {
         {/* MOBILE SEARCH */}
         <div className="md:hidden pb-4">
           <div className="relative">
-            <Search
-              size={18}
-              className="
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                text-primary/40
-              "
-            />
+            <Search size={18}className=" absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 " />
 
-            <input
-              type="text"
-              placeholder="Search posts..."
-              className="
-                w-full
-                bg-[#f5f5f7]
-                border
-                border-primary/10
-                rounded-full
-                pl-11
-                pr-4
-                py-3
-                text-sm
-                text-primary
-                placeholder:text-primary/40
-                outline-none
-                focus:border-[#4285f4]
-              "
-            />
+            <input type="text" placeholder="Search posts..."
+              className=" w-full bg-White/80 border border-primary/10 rounded-full pl-11 pr-4 py-3 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand " />
           </div>
         </div>
       </div>

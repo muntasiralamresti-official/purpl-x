@@ -2,7 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Settings, Bookmark, Users, LogOut, ChevronRight, Loader2} from "lucide-react";
+import {
+  Settings,
+  Bookmark,
+  Users,
+  LogOut,
+  ChevronRight,
+  Loader2,
+} from "lucide-react";
 import { get } from "@/app/lib/apiClient";
 
 export default function ProfilePopup() {
@@ -13,21 +20,21 @@ export default function ProfilePopup() {
   const popupRef = useRef(null);
 
   useEffect(() => {
-  async function fetchUser() {
-    try {
-      const data = await get("/users/1");
+    async function fetchUser() {
+      try {
+        const data = await get("/users/1");
 
-      if (data?.id) {
-        setUser(data);
+        if (data?.id) {
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
-    } finally {
-      setLoading(false);
     }
-  }
 
-   fetchUser();
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -42,11 +49,10 @@ export default function ProfilePopup() {
 
   return (
     <div className="relative" ref={popupRef}>
-
       {/* Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-[#4285f4] shrink-0"
+        className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-brand shrink-0"
       >
         {user?.image ? (
           <img
@@ -55,7 +61,7 @@ export default function ProfilePopup() {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-[#4285f4]" />
+          <div className="w-full h-full bg-brand" />
         )}
       </button>
 
@@ -107,7 +113,7 @@ export default function ProfilePopup() {
 
                 <Link
                   href="/profile"
-                  className="mt-2 xs:mt-3 block text-center text-sm xs:text-base text-[#4285f4] font-medium"
+                  className="mt-2 xs:mt-3 block text-center text-sm xs:text-base text-brand font-medium"
                 >
                   View Profile
                 </Link>
@@ -131,7 +137,10 @@ export default function ProfilePopup() {
                       <Icon size={18} className="xs:size-5 shrink-0" />
                       <span className="text-sm xs:text-base">{label}</span>
                     </div>
-                    <ChevronRight size={16} className="xs:size-[18px] text-gray-400" />
+                    <ChevronRight
+                      size={16}
+                      className="xs:size-[18px] text-gray-400"
+                    />
                   </Link>
                 ))}
               </div>

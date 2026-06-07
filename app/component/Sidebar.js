@@ -126,7 +126,7 @@ export default function Sidebar() {
           flex items-center gap-4
           p-4
           rounded-3xl
-          bg-[#f5f5f7]
+          bg-White/80
           border border-primary/20
           shadow-sm
           mb-5
@@ -214,7 +214,7 @@ export default function Sidebar() {
                       shadow-md
                     `
                     : `
-                      bg-[#f5f5f7]
+                      bg-White/80
                       border-primary/20
                       text-[#1d1d1f]
                       hover:bg-[#ebebee]
