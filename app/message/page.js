@@ -92,7 +92,7 @@ export default function MessagePage() {
           rounded-2xl xs:rounded-3xl md:rounded-[32px]
           border border-primary/10
           bg-white
-          shadow-[0_10px_40px_rgba(0,0,0,0.08)]
+          shadow-xl
           overflow-hidden
           grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr]
         "
@@ -209,9 +209,7 @@ export default function MessagePage() {
                   key={i}
                   className="w-8 h-8 xs:w-9 xs:h-9 sm:w-11 sm:h-11 rounded-full bg-primary/5 hover:bg-primary/10 flex items-center justify-center text-secondary"
                 >
-                  <Icon size={16} className="xs:hidden" />
-                  <Icon size={18} className="hidden xs:block sm:hidden" />
-                  <Icon size={20} className="hidden sm:block" />
+                  <Icon size={20} className="w-5 h-5 sm:w-6 sm:h-6"  />
                 </button>
               ))}
             </div>

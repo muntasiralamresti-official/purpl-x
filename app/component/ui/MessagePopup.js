@@ -37,9 +37,7 @@ export default function MessagePopup() {
         onClick={() => setOpen(!open)}
         className="relative w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full bg-brand text-white flex items-center justify-center shadow-sm"
       >
-        {/* <MessageCircle size={18} className="xs:hidden" /> */}
-        <MessageCircle size={20} className="w-5 h-5 sm:w-[22px] sm:h-[22px]" />
-        {/* <MessageCircle size={22} className="hidden sm:block" /> */}
+        <MessageCircle size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
 
         {totalUnread > 0 && (
           <span className="absolute -top-1 -right-1 w-4 h-4 xs:w-5 xs:h-5 rounded-full bg-red-600 text-white text-[10px] xs:text-xs font-bold flex items-center justify-center">
