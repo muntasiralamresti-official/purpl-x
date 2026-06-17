@@ -20,10 +20,7 @@ export default async function Home() {
       <div className="container mx-auto pt-6 px-4 flex gap-8">
         <Sidebar />
 
-        <Feed
-          serverPosts={data?.posts || []}
-          total={data?.total || 0}
-        />
+        <Feed serverPosts={data?.posts || []} total={data?.total || 0} />
       </div>
     </main>
   );

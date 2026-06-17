@@ -11,10 +11,10 @@ async function getUsers() {
 
 export default async function FriendsPage() {
   let data = { users: [] };
-  
+
   try {
     data = await getUsers();
-    
+
     if (!data?.users || !Array.isArray(data.users)) {
       throw new Error("Failed to load friends");
     }
@@ -26,13 +26,11 @@ export default async function FriendsPage() {
   return (
     <main className="min-h-screen bg-white">
       <div className="container mx-auto px-2 xs:px-3 sm:px-4 pt-4 xs:pt-5 sm:pt-6 flex gap-4 xs:gap-5 sm:gap-6 lg:gap-8">
-
         {/* Sidebar */}
         <Sidebar />
 
         {/* Friends */}
         <div className="flex-1 min-w-0">
-
           {/* Header */}
           <div className="mb-5 xs:mb-6 sm:mb-8">
             <div className="flex items-center gap-3 xs:gap-4">
@@ -76,7 +74,7 @@ export default async function FriendsPage() {
                     {user.firstName} {user.lastName}
                   </h2>
                   <p className="text-[11px] xs:text-xs sm:text-sm text-primary/60 mt-0.5 xs:mt-1">
-                    {user.id % 40 + 6} mutual friends
+                    {(user.id % 40) + 6} mutual friends
                   </p>
 
                   {/* Buttons */}

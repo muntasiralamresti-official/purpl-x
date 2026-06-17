@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 export default function Error({ error, reset }) {
   return (
@@ -9,8 +9,12 @@ export default function Error({ error, reset }) {
         <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
           <AlertCircle size={32} className="text-red-600" />
         </div>
-        <h2 className="text-2xl font-bold text-primary mb-2">Something went wrong</h2>
-        <p className="text-primary/60 mb-6">{error?.message || 'An unexpected error occurred. Please try again.'}</p>
+        <h2 className="text-2xl font-bold text-primary mb-2">
+          Something went wrong
+        </h2>
+        <p className="text-primary/60 mb-6">
+          {error?.message || "An unexpected error occurred. Please try again."}
+        </p>
         <button
           onClick={() => reset()}
           className="inline-flex items-center gap-2 px-6 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition-all"

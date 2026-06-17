@@ -9,9 +9,9 @@ async function request(
     body = null,
     headers = {},
     cache = "force-cache",
-    revalidate = false, 
+    revalidate = false,
     tags = [],
-  } = {}
+  } = {},
 ) {
   try {
     const options = {
@@ -25,11 +25,11 @@ async function request(
       cache,
 
       next: revalidate
-      ? {
-        revalidate,
-        tags,
-      }
-      : undefined,
+        ? {
+            revalidate,
+            tags,
+          }
+        : undefined,
     };
 
     // Body
@@ -37,36 +37,24 @@ async function request(
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(
-      `${BASE_URL}${endpoint}`,
-      options
-    );
+    const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
     // error
     if (!response.ok) {
-      throw new Error(
-        `Request Failed: ${response.status}`
-      );
+      throw new Error(`Request Failed: ${response.status}`);
     }
 
     return await response.json();
   } catch (error) {
-    console.error(
-      "API CLIENT ERROR:",
-      error.message
-    );
+    console.error("API CLIENT ERROR:", error.message);
 
     throw error;
   }
-  
 }
 
 // GET
 
-export async function get(
-  endpoint,
-  options = {}
-) {
+export async function get(endpoint, options = {}) {
   return request(endpoint, {
     method: "GET",
     ...options,
@@ -75,11 +63,7 @@ export async function get(
 
 // Post
 
-export async function post(
-  endpoint,
-  body,
-  options ={}
-) {
+export async function post(endpoint, body, options = {}) {
   return request(endpoint, {
     method: "POST",
     body,
@@ -90,11 +74,7 @@ export async function post(
 
 // PUT
 
-export async function put(
-  endpoint,
-  body,
-  options = {}
-) {
+export async function put(endpoint, body, options = {}) {
   return request(endpoint, {
     method: "PUT",
     body,
@@ -105,11 +85,7 @@ export async function put(
 
 // PATCH
 
-export async function patch(
-  endpoint,
-  body,
-  options = {}
-) {
+export async function patch(endpoint, body, options = {}) {
   return request(endpoint, {
     method: "PATCH",
     body,
@@ -120,10 +96,7 @@ export async function patch(
 
 // Delete
 
-export async function remove(
-  endpoint,
-  options = {}
-) {
+export async function remove(endpoint, options = {}) {
   return request(endpoint, {
     method: "DELETE",
     cache: "no-store",

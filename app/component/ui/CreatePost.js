@@ -1,7 +1,13 @@
-"use client"
+"use client";
 import {
-  Check, ChevronDown, Globe,
-  Loader2, Lock, Send, UserCircle, Users
+  Check,
+  ChevronDown,
+  Globe,
+  Loader2,
+  Lock,
+  Send,
+  UserCircle,
+  Users,
 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { post } from "@/app/lib/apiClient";
@@ -11,19 +17,19 @@ import { post } from "@/app/lib/apiClient";
 const MAX_CHARS = 300;
 
 const AUDIENCES = [
-  { label: "Public",  icon: Globe,  value: "public"  },
-  { label: "Friends", icon: Users,  value: "friends" },
-  { label: "Only me", icon: Lock,   value: "only_me" },
+  { label: "Public", icon: Globe, value: "public" },
+  { label: "Friends", icon: Users, value: "friends" },
+  { label: "Only me", icon: Lock, value: "only_me" },
 ];
 
 // ─── CreatePost ───────────────────────────────────────────────────────────────
 
 export function CreatePost({ onPostCreated }) {
-  const [title,       setTitle]       = useState("");
-  const [body,        setBody]        = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [audienceIdx, setAudienceIdx] = useState(0);
-  const [loading,     setLoading]     = useState(false);
-  const [posted,      setPosted]      = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [posted, setPosted] = useState(false);
 
   const textareaRef = useRef(null);
 
@@ -36,15 +42,18 @@ export function CreatePost({ onPostCreated }) {
     }
   }, []);
 
-  const cycleAudience = useCallback(() => setAudienceIdx((i) => (i + 1) % AUDIENCES.length), []);
+  const cycleAudience = useCallback(
+    () => setAudienceIdx((i) => (i + 1) % AUDIENCES.length),
+    [],
+  );
 
   const handleCreatePost = useCallback(async () => {
     if (!body.trim() || body.length > MAX_CHARS) return;
 
     const postPayload = {
-      title:    title.trim() || "New Post",
+      title: title.trim() || "New Post",
       body,
-      userId:   5,
+      userId: 5,
       audience: AUDIENCES[audienceIdx].value,
     };
 
@@ -55,8 +64,8 @@ export function CreatePost({ onPostCreated }) {
       setPosted(false);
 
       const data = await post("/posts/add", {
-        title:  postPayload.title,
-        body:   postPayload.body,
+        title: postPayload.title,
+        body: postPayload.body,
         userId: postPayload.userId,
       });
 
@@ -69,11 +78,11 @@ export function CreatePost({ onPostCreated }) {
 
       const newPost = {
         ...data,
-        id:        data.id || Date.now(),
-        title:     postPayload.title,
+        id: data.id || Date.now(),
+        title: postPayload.title,
         reactions: { likes: 0, dislikes: 0 },
-        views:     1,
-        userId:    postPayload.userId,
+        views: 1,
+        userId: postPayload.userId,
       };
 
       console.log("New post object:", newPost);
@@ -95,8 +104,8 @@ export function CreatePost({ onPostCreated }) {
     }
   }, [title, body, audienceIdx, onPostCreated]);
 
-  const charLen      = body.length;
-  const canPost      = charLen > 0 && charLen <= MAX_CHARS && !loading;
+  const charLen = body.length;
+  const canPost = charLen > 0 && charLen <= MAX_CHARS && !loading;
   const AudienceIcon = AUDIENCES[audienceIdx].icon;
 
   return (
@@ -110,7 +119,9 @@ export function CreatePost({ onPostCreated }) {
             </div>
             <div>
               <p className="text-white text-sm font-semibold">Post published</p>
-              <p className="text-white/60 text-xs mt-0.5">Your post is now live</p>
+              <p className="text-white/60 text-xs mt-0.5">
+                Your post is now live
+              </p>
             </div>
           </div>
         </div>
@@ -118,7 +129,6 @@ export function CreatePost({ onPostCreated }) {
 
       {/* Composer card */}
       <div className="rounded-3xl bg-white shadow-sm p-4 space-y-3">
-
         {/* Header: avatar + name + audience */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white shrink-0">
@@ -163,7 +173,9 @@ export function CreatePost({ onPostCreated }) {
         {/* Footer: char count + Post button */}
         <div className="flex items-center justify-end gap-3">
           {charLen > 0 && (
-            <span className={`text-xs tabular-nums ${charLen > MAX_CHARS ? "text-red-500" : charLen > MAX_CHARS * 0.9 ? "text-yellow-500" : "text-primary/40"}`}>
+            <span
+              className={`text-xs tabular-nums ${charLen > MAX_CHARS ? "text-red-500" : charLen > MAX_CHARS * 0.9 ? "text-yellow-500" : "text-primary/40"}`}
+            >
               {charLen}/{MAX_CHARS}
             </span>
           )}
@@ -174,11 +186,17 @@ export function CreatePost({ onPostCreated }) {
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand text-white text-sm font-semibold hover:opacity-90 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {loading ? (
-              <><Loader2 size={14} className="animate-spin" /> Posting...</>
+              <>
+                <Loader2 size={14} className="animate-spin" /> Posting...
+              </>
             ) : posted ? (
-              <><Check size={14} /> Done</>
+              <>
+                <Check size={14} /> Done
+              </>
             ) : (
-              <><Send size={14} /> Post</>
+              <>
+                <Send size={14} /> Post
+              </>
             )}
           </button>
         </div>

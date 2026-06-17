@@ -1,6 +1,17 @@
 "use client";
 
-import { Bookmark,Eye, Flag, Globe, MoreHorizontal, Pencil, ThumbsDown, ThumbsUp, Trash2, UserCircle,} from "lucide-react";
+import {
+  Bookmark,
+  Eye,
+  Flag,
+  Globe,
+  MoreHorizontal,
+  Pencil,
+  ThumbsDown,
+  ThumbsUp,
+  Trash2,
+  UserCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -116,7 +127,10 @@ export default function PostCard({ post, details = false }) {
 
       <div className="flex flex-wrap gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-5 py-3 xs:py-4">
         {post.tags?.map((tag, index) => (
-          <span key={index} className="text-[11px] xs:text-xs sm:text-sm text-primary">
+          <span
+            key={index}
+            className="text-[11px] xs:text-xs sm:text-sm text-primary"
+          >
             #{tag}
           </span>
         ))}
@@ -129,19 +143,25 @@ export default function PostCard({ post, details = false }) {
               <div className="h-8 w-8 xs:h-10 xs:w-10 sm:h-12 sm:w-12 rounded-full bg-brand/50 text-brand flex items-center justify-center">
                 <ThumbsUp size={14} fill="currentColor" />
               </div>
-              <span className="text-xs xs:text-sm sm:text-base">{post?.reactions?.likes}</span>
+              <span className="text-xs xs:text-sm sm:text-base">
+                {post?.reactions?.likes}
+              </span>
             </div>
 
             <div className="flex items-center gap-1.5 xs:gap-2">
               <div className="h-8 w-8 xs:h-10 xs:w-10 sm:h-12 sm:w-12 rounded-full bg-red-400/20 text-red-700 flex items-center justify-center">
                 <ThumbsDown size={14} fill="currentColor" />
               </div>
-              <span className="text-xs xs:text-sm sm:text-base">{post?.reactions?.dislikes}</span>
+              <span className="text-xs xs:text-sm sm:text-base">
+                {post?.reactions?.dislikes}
+              </span>
             </div>
 
             <div className="flex items-center gap-1.5 xs:gap-2 text-primary/80">
               <Eye size={14} />
-              <span className="text-xs xs:text-sm sm:text-base">{post.views}</span>
+              <span className="text-xs xs:text-sm sm:text-base">
+                {post.views}
+              </span>
             </div>
           </div>
 

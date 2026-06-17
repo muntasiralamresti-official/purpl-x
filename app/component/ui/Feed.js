@@ -21,7 +21,7 @@ export default function Feed({ serverPosts, total }) {
 
     try {
       const data = await get(`/posts?limit=20&skip=${skip}`);
-      
+
       // Validate data structure
       if (!data?.posts || !Array.isArray(data.posts)) {
         throw new Error("Invalid response structure");
@@ -44,7 +44,10 @@ export default function Feed({ serverPosts, total }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 300
+      ) {
         loadMore();
       }
     };
@@ -64,7 +67,6 @@ export default function Feed({ serverPosts, total }) {
   return (
     <div className="w-full min-h-screen overflow-x-hidden">
       <div className="w-full max-w-[680px] lg:max-w-[1120px] mx-auto px-3 xs:px-4 sm:px-5 lg:px-6 py-4 xs:py-5 sm:py-6 space-y-4 xs:space-y-5 sm:space-y-6">
-
         {/* Create Post */}
         <CreatePost onPostCreated={handlePostCreated} />
 

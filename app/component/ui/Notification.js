@@ -1,7 +1,7 @@
 "use client";
 
 import { get } from "@/app/lib/apiClient";
-import { Bell, Heart,MessageCircle, UserPlus, X,} from "lucide-react";
+import { Bell, Heart, MessageCircle, UserPlus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -77,14 +77,24 @@ export default function NotificationBell() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const TypeIcon = ({ type }) => {
-    if (type === "like") return <Heart size={16} className="text-red-500 shrink-0 xs:size-[18px]" />;
-    if (type === "comment") return <MessageCircle size={16} className="text-brand shrink-0 xs:size-[18px]" />;
-    return <UserPlus size={16} className="text-green-500 shrink-0 xs:size-[18px]" />;
+    if (type === "like")
+      return (
+        <Heart size={16} className="text-red-500 shrink-0 xs:size-[18px]" />
+      );
+    if (type === "comment")
+      return (
+        <MessageCircle
+          size={16}
+          className="text-brand shrink-0 xs:size-[18px]"
+        />
+      );
+    return (
+      <UserPlus size={16} className="text-green-500 shrink-0 xs:size-[18px]" />
+    );
   };
 
   return (
     <div className="relative" ref={popupRef}>
-
       {/* Bell Button */}
       <button
         onClick={() => setOpen(!open)}
@@ -102,7 +112,6 @@ export default function NotificationBell() {
       {/* Popup */}
       {open && (
         <div className="absolute -right-26 sm:right-0 top-11 xs:top-12 sm:top-14 z-50 w-[calc(100vw-24px)] xs:w-[320px] sm:w-[380px] max-w-[380px] bg-white rounded-2xl xs:rounded-3xl overflow-hidden shadow-xl border border-primary/10">
-
           {/* Header */}
           <div className="flex items-center justify-between px-3 xs:px-4 sm:px-5 py-3 xs:py-4 sm:py-5 border-b border-primary/10">
             <h2 className="text-lg xs:text-xl sm:text-2xl font-bold text-primary">

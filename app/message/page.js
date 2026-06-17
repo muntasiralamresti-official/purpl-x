@@ -1,6 +1,17 @@
 "use client";
 
-import {CheckCheck, ImageIcon, Info, Mic, Phone, Search, Send, Smile, Video, ArrowLeft} from "lucide-react";
+import {
+  CheckCheck,
+  ImageIcon,
+  Info,
+  Mic,
+  Phone,
+  Search,
+  Send,
+  Smile,
+  Video,
+  ArrowLeft,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -97,7 +108,6 @@ export default function MessagePage() {
           grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr]
         "
       >
-
         {/* ── Sidebar ── */}
         <div
           className={`
@@ -132,7 +142,9 @@ export default function MessagePage() {
                 key={chat.id}
                 onClick={() => handleSelectUser(chat)}
                 className={`w-full flex items-center gap-3 xs:gap-4 p-3 xs:p-4 rounded-xl xs:rounded-2xl transition-all ${
-                  selectedUser.id === chat.id ? "bg-brand" : "hover:bg-primary/5"
+                  selectedUser.id === chat.id
+                    ? "bg-brand"
+                    : "hover:bg-primary/5"
                 }`}
               >
                 <div className="relative shrink-0">
@@ -173,7 +185,6 @@ export default function MessagePage() {
         >
           {/* Header */}
           <div className="h-16 xs:h-18 sm:h-20 md:h-24 px-3 xs:px-4 sm:px-6 flex items-center justify-between sticky top-0 z-20 bg-primary/10 backdrop-blur-xl shrink-0">
-
             <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 min-w-0">
               {/* Back button — mobile only */}
               <button
@@ -201,7 +212,9 @@ export default function MessagePage() {
                       : "text-primary/40"
                   }`}
                 >
-                  {onlineUsers.includes(selectedUser.id) ? "Active now" : "Offline"}
+                  {onlineUsers.includes(selectedUser.id)
+                    ? "Active now"
+                    : "Offline"}
                 </p>
               </div>
             </div>
@@ -212,7 +225,7 @@ export default function MessagePage() {
                   key={i}
                   className="w-8 h-8 xs:w-9 xs:h-9 sm:w-11 sm:h-11 rounded-full bg-primary/5 hover:bg-primary/10 flex items-center justify-center text-secondary"
                 >
-                  <Icon size={20} className="w-5 h-5 sm:w-6 sm:h-6"  />
+                  <Icon size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               ))}
             </div>
@@ -246,7 +259,9 @@ export default function MessagePage() {
                   }`}
                 >
                   <span>{msg.time}</span>
-                  {msg.sender === "me" && <CheckCheck size={10} className="xs:size-3" />}
+                  {msg.sender === "me" && (
+                    <CheckCheck size={10} className="xs:size-3" />
+                  )}
                 </div>
               </div>
             ))}
@@ -268,7 +283,6 @@ export default function MessagePage() {
           {/* Input */}
           <div className="p-2.5 xs:p-3 sm:p-5 sticky bottom-0 bg-primary/10 backdrop-blur-xl shrink-0">
             <div className="flex gap-1.5 xs:gap-2 sm:gap-3">
-
               {/* Emoji — hide on smallest */}
               <button className="hidden xs:flex w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl bg-primary/10 hover:bg-primary/15 items-center justify-center text-primary shrink-0">
                 <Smile size={18} className="sm:hidden" />
