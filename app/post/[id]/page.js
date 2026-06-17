@@ -19,11 +19,17 @@ export default async function PostDetails({params}) {
       revalidate: 60,
     });
 
+    // Validate post response
+    if (!post?.id) {
+      throw new Error("Post not found");
+    }
+
     // fetch comments
     comments = await get(`/posts/${id}/comments`,{
       revalidate:60,
     });
   } catch (error) {
+    console.error("Post fetch error:", error);
     notFound();
   }
   return(
@@ -40,7 +46,7 @@ export default async function PostDetails({params}) {
           </div>
 
           {/* NO Comments */}
-          {(!comments?.comments || comments.comments.length === 0) && (
+          {(!comments?.comments || !Array.isArray(comments.comments) || comments.comments.length === 0) && (
             <div className="rounded-3xl bg-white backdrop-blur-2xl shadow-sm p-10 text-center">
               <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-primary mb-5">
                 <MessageCircle size={36}/>
@@ -49,7 +55,7 @@ export default async function PostDetails({params}) {
             </div>
           )}
           {/* Comments List */}
-          {comments?.comments?.map((comment) => (
+          {comments?.comments && Array.isArray(comments.comments) && comments.comments.map((comment) => (
             <div key={comment.id} className="rounded-2xl bg-white shadow-sm backdrop-blur-2xl p-5">
               {/* User */}
                <div className="flex items-center gap-3 mb-4">
@@ -59,7 +65,7 @@ export default async function PostDetails({params}) {
 
                 {/* Info */}
                 <div>
-                  <h2 className="text-primary font-semibold">{comment.user.fullName}</h2>
+                  <h2 className="text-primary font-semibold">{comment.user?.fullName || "Anonymous"}</h2>
                 </div>
                </div>
 

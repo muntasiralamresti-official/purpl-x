@@ -17,18 +17,17 @@ export default function Sidebar() {
 
   /* LOAD USER */
   useEffect(() => {
-    setMounted(true);
-
-    try {
-      const storedUser = localStorage.getItem("purpl-user");
-
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      console.log(error);
+  try {
+    const storedUser = localStorage.getItem("purpl-user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-  }, []);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setMounted(true); // ✅ always runs, even if localStorage throws
+  }
+}, []);
 
   /* PREVENT HYDRATION */
   if (!mounted) {

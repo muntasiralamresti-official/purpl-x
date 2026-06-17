@@ -10,7 +10,18 @@ async function getUsers() {
 }
 
 export default async function FriendsPage() {
-  const data = await getUsers();
+  let data = { users: [] };
+  
+  try {
+    data = await getUsers();
+    
+    if (!data?.users || !Array.isArray(data.users)) {
+      throw new Error("Failed to load friends");
+    }
+  } catch (error) {
+    console.error("Friends fetch error:", error);
+    // Return empty state page
+  }
 
   return (
     <main className="min-h-screen bg-white">

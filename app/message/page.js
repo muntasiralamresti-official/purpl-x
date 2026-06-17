@@ -142,6 +142,9 @@ export default function MessagePage() {
                     width={56}
                     height={56}
                     className="w-11 h-11 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
                   />
                   {onlineUsers.includes(chat.id) && (
                     <span className="absolute bottom-0 right-0 w-3 h-3 xs:w-4 xs:h-4 bg-green-500 rounded-full border-2 border-white" />

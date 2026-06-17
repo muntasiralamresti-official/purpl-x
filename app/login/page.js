@@ -33,13 +33,16 @@ export default function LoginPage() {
         }),
       });
 
+      // Check response status FIRST
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       /* INVALID */
-      if (data.message) {
-        alert("Invalid username or password 😵");
-
-        return;
+      if (!data.id || data.message) {
+        throw new Error("Invalid username or password");
       }
 
       /* SAVE USER */
@@ -49,9 +52,9 @@ export default function LoginPage() {
 
       window.location.href = "/";
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
 
-      alert("Login failed 😵");
+      alert(error.message || "Login failed 😵");
     } finally {
       setLoading(false);
     }

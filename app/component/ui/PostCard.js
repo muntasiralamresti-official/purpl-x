@@ -89,7 +89,7 @@ export default function PostCard({ post, details = false }) {
         </p>
       </div>
 
-      {post.mediaPreview && (
+      {post.mediaPreview && post.mediaType && (
         <div className="px-3 xs:px-4 sm:px-5 pt-3 xs:pt-4">
           <div className="overflow-hidden rounded-xl xs:rounded-2xl">
             {post.mediaType === "video" ? (
@@ -98,12 +98,16 @@ export default function PostCard({ post, details = false }) {
                 controls
                 playsInline
                 className="w-full max-h-full  object-cover"
+                onError={() => console.error("Video failed to load")}
               />
             ) : (
               <img
                 src={post.mediaPreview}
                 alt="post media"
                 className="w-full max-h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = "none"; // Hide broken image
+                }}
               />
             )}
           </div>

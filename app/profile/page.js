@@ -11,10 +11,24 @@ import {
 import Image from "next/image";
 
 async function getUser() {
-  const res = await fetch("https://dummyjson.com/users/1", {
-    next: { revalidate: 60 },
-  });
-  return res.json();
+  try {
+    const res = await fetch("https://dummyjson.com/users/1", {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) throw new Error(`Failed with status ${res.status}`);
+    
+    const user = await res.json();
+    
+    // Validate required fields
+    if (!user?.id || !user?.address?.city || !user?.address?.state) {
+      throw new Error("Invalid user data structure");
+    }
+    
+    return user;
+  } catch (error) {
+    throw error; // Let Next.js handle with error.js boundary
+  }
 }
 
 export default async function Profile() {

@@ -32,8 +32,16 @@ function useStories() {
           get("/posts?limit=12"),
         ]);
 
-        const users = usersData?.users ?? [];
-        const posts = postsData?.posts ?? [];
+        // Validate responses
+        if (!usersData?.users || !Array.isArray(usersData.users)) {
+          throw new Error("Failed to fetch users");
+        }
+        if (!postsData?.posts || !Array.isArray(postsData.posts)) {
+          throw new Error("Failed to fetch posts");
+        }
+
+        const users = usersData.users;
+        const posts = postsData.posts;
 
         const mapped = users.map((user, i) => ({
           id: user.id,

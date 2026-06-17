@@ -21,6 +21,11 @@ export default function NotificationBell() {
         const data = await get("/users?limit=4");
         console.log("NOTIFICATION DATA:", data);
 
+        // Check if data is error response
+        if (!data || data.success === false) {
+          throw new Error(data?.message || "Failed to fetch notifications");
+        }
+
         if (!data?.users || !Array.isArray(data.users)) {
           setNotifications([]);
           return;
@@ -49,6 +54,7 @@ export default function NotificationBell() {
         setNotifications(mapped);
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
+        setNotifications([]); // Fallback to empty
       } finally {
         setLoading(false);
       }

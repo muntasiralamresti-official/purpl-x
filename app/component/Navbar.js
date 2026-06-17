@@ -29,7 +29,7 @@ export default function Navbar() {
               width={160}
               height={40}
               alt="Purpl Logo"
-              className="object-contain w-[90px] sm:w-[140px] md:w-[160px]"
+              className="object-contain w-[90px] sm:w-[140px] md:w-[160px] h-auto"
             />
           </Link>
 
@@ -39,7 +39,7 @@ export default function Navbar() {
               <Search size={18} className=" absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 " />
 
               <input type="text" placeholder="Search posts..." value={search} onChange={(e) => setSearch(e.target.value)}
-                className=" w-full bg-White/80 border border-primary/10 rounded-full pl-11 pr-4 py-3  text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand focus:bg-white transition-all "
+                className=" w-full bg-white/80 border border-primary/10 rounded-full pl-11 pr-4 py-3  text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand focus:bg-white transition-all "
               />
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function Navbar() {
             <Search size={18}className=" absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 " />
 
             <input type="text" placeholder="Search posts..."
-              className=" w-full bg-White/80 border border-primary/10 rounded-full pl-11 pr-4 py-3 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand " />
+              className=" w-full bg-white/80 border border-primary/10 rounded-full pl-11 pr-4 py-3 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-brand " />
           </div>
         </div>
       </div>

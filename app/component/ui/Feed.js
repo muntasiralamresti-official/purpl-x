@@ -21,6 +21,11 @@ export default function Feed({ serverPosts, total }) {
 
     try {
       const data = await get(`/posts?limit=20&skip=${skip}`);
+      
+      // Validate data structure
+      if (!data?.posts || !Array.isArray(data.posts)) {
+        throw new Error("Invalid response structure");
+      }
 
       setPosts((prev) => {
         const existingIds = new Set(prev.map((p) => p.id));
@@ -30,7 +35,8 @@ export default function Feed({ serverPosts, total }) {
 
       setSkip((prev) => prev + 20);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to load more posts:", error);
+      alert("Failed to load more posts. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -45,7 +51,7 @@ export default function Feed({ serverPosts, total }) {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [skip, loading]);
+  }, [skip, total, loading]);
 
   const handlePostCreated = (newPost) => {
     setPosts((prev) => {

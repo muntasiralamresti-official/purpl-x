@@ -24,6 +24,15 @@ export default function ProfilePopup() {
       try {
         const data = await get("/users/1");
 
+        // Validate data structure - don't check just for .id
+        if (!data || typeof data !== 'object') {
+          throw new Error("Invalid user data");
+        }
+        
+        if (data.success === false) {
+          throw new Error(data.message || "Failed to fetch user");
+        }
+
         if (data?.id) {
           setUser(data);
         }

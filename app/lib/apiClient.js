@@ -52,14 +52,11 @@ async function request(
     return await response.json();
   } catch (error) {
     console.error(
-      "ÄPI CLIENT ERROR:",
+      "API CLIENT ERROR:",
       error.message
     );
 
-    return {
-      success: false,
-      message: error.message,
-    };
+    throw error;
   }
   
 }
