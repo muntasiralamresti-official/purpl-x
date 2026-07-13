@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+// NOTE: Tailwind v4 uses CSS-first configuration via @theme in globals.css.
+// This file only exists for tooling compatibility (e.g. some IDE extensions).
+// Colors and breakpoints are defined in app/globals.css @theme block.
+// Do NOT add colors or breakpoints here — use globals.css instead.
 module.exports = {
   content: [
     "./app/**/*.{js,jsx}",
@@ -7,28 +11,7 @@ module.exports = {
   ],
 
   theme: {
-    extend: {
-      screens: {
-        xs: "375px",
-
-        sm: "640px",
-
-        md: "768px",
-
-        lg: "1024px",
-
-        xl: "1280px",
-
-        "2xl": "1536px",
-
-        "3xl": "1920px",
-      },
-
-      colors: {
-        brand: "#6366f1",
-        primary: "#111827",
-      },
-    },
+    extend: {},
   },
 
   plugins: [],

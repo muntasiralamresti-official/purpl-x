@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function MessagePopup() {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const popupRef = useRef(null);
 
   const chats = [
@@ -15,6 +16,13 @@ export default function MessagePopup() {
     { id: 3, name: "Amir Hamza", image: "/amir.jpg", message: "Assalamu Alaikum", time: "1h", unread: 0 },
     { id: 4, name: "Rashed Bro", image: "/rashed.jpg", message: "Chada pai nai Ajke", time: "3h", unread: 4 },
   ];
+
+  // Filter chats by name
+  const filteredChats = searchQuery
+    ? chats.filter((c) =>
+        c.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : chats;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -69,6 +77,8 @@ export default function MessagePopup() {
               <input
                 type="text"
                 placeholder="Search Messenger"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="
                   w-full h-9 xs:h-10 sm:h-11
                   rounded-full bg-gray-100
@@ -83,44 +93,50 @@ export default function MessagePopup() {
 
           {/* Chat List */}
           <div className="max-h-[300px] xs:max-h-[360px] sm:max-h-[420px] overflow-y-auto">
-            {chats.map((chat) => (
-              <Link
-                key={chat.id}
-                href="/message"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 xs:gap-3 px-3 xs:px-4 py-2.5 xs:py-3 hover:bg-gray-50 transition-colors"
-              >
-                <div className="relative shrink-0">
-                  <Image
-                    src={chat.image}
-                    alt={chat.name}
-                    width={48}
-                    height={48}
-                    className="rounded-full object-cover w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14"
-                  />
-                </div>
+            {filteredChats.length === 0 ? (
+              <div className="py-8 text-center text-sm text-primary/50">
+                No chats found
+              </div>
+            ) : (
+              filteredChats.map((chat) => (
+                <Link
+                  key={chat.id}
+                  href="/message"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 xs:gap-3 px-3 xs:px-4 py-2.5 xs:py-3 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="relative shrink-0">
+                    <Image
+                      src={chat.image}
+                      alt={chat.name}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14"
+                    />
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-primary text-sm xs:text-base truncate">
-                    {chat.name}
-                  </h3>
-                  <p className="text-xs xs:text-sm text-primary/60 truncate">
-                    {chat.message}
-                  </p>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-primary text-sm xs:text-base truncate">
+                      {chat.name}
+                    </h3>
+                    <p className="text-xs xs:text-sm text-primary/60 truncate">
+                      {chat.message}
+                    </p>
+                  </div>
 
-                <div className="flex flex-col items-end shrink-0">
-                  <span className="text-[10px] xs:text-xs text-primary/50 whitespace-nowrap">
-                    {chat.time}
-                  </span>
-                  {chat.unread > 0 && (
-                    <span className="mt-1 w-4 h-4 xs:w-5 xs:h-5 rounded-full bg-brand text-white text-[10px] xs:text-xs flex items-center justify-center">
-                      {chat.unread}
+                  <div className="flex flex-col items-end shrink-0">
+                    <span className="text-[10px] xs:text-xs text-primary/50 whitespace-nowrap">
+                      {chat.time}
                     </span>
-                  )}
-                </div>
-              </Link>
-            ))}
+                    {chat.unread > 0 && (
+                      <span className="mt-1 w-4 h-4 xs:w-5 xs:h-5 rounded-full bg-brand text-white text-[10px] xs:text-xs flex items-center justify-center">
+                        {chat.unread}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
 
           {/* Footer */}

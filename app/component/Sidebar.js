@@ -1,33 +1,26 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
 
-import { useEffect, useState } from "react";
-
 import { usePathname } from "next/navigation";
 
-import { Users, LayoutDashboard, Clock3, Bookmark, MessageCircle, UserCircle2, Home, Bell, Settings, Images,} from "lucide-react";
+import {
+  Users,
+  Bookmark,
+  MessageCircle,
+  UserCircle2,
+  Home,
+  Bell,
+  Settings,
+} from "lucide-react";
+
+import { useAuth } from "@/app/lib/AuthContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
 
-  const [mounted, setMounted] = useState(false);
-
-  const [user, setUser] = useState(null);
-
-  /* LOAD USER */
-  useEffect(() => {
-  try {
-    const storedUser = localStorage.getItem("purpl-user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setMounted(true); // ✅ always runs, even if localStorage throws
-  }
-}, []);
+  const { user, mounted } = useAuth();
 
   /* PREVENT HYDRATION */
   if (!mounted) {
@@ -48,17 +41,19 @@ export default function Sidebar() {
       href: "/people",
     },
 
-    {
-      icon: <LayoutDashboard size={22} />,
-      label: "Dashboard",
-      href: "/dashboard",
-    },
+    // TODO: build these pages
+    // {
+    //   icon: <LayoutDashboard size={22} />,
+    //   label: "Dashboard",
+    //   href: "/dashboard",
+    // },
 
-    {
-      icon: <Clock3 size={22} />,
-      label: "Memories",
-      href: "/memories",
-    },
+    // TODO: build these pages
+    // {
+    //   icon: <Clock3 size={22} />,
+    //   label: "Memories",
+    //   href: "/memories",
+    // },
 
     {
       icon: <Bookmark size={22} />,
@@ -78,11 +73,12 @@ export default function Sidebar() {
       href: "/notifications",
     },
 
-    {
-      icon: <Images size={22} />,
-      label: "Media",
-      href: "/media",
-    },
+    // TODO: build these pages
+    // {
+    //   icon: <Images size={22} />,
+    //   label: "Media",
+    //   href: "/media",
+    // },
 
     {
       icon: <Settings size={22} />,

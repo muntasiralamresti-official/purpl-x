@@ -1,328 +1,579 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
+  ArrowLeft,
   CheckCheck,
   ImageIcon,
   Info,
   Mic,
+  MoreVertical,
   Phone,
   Search,
   Send,
   Smile,
   Video,
-  ArrowLeft,
+  X,
+  Plus,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/app/lib/AuthContext";
 
-export default function MessagePage() {
-  const chats = [
-    { id: 1, name: "Elias Sir", image: "/elias.jpg" },
-    { id: 2, name: "Ekramul Islam", image: "/ekramul.jpg" },
-    { id: 3, name: "Amir Hamza", image: "/amir.jpg" },
-    { id: 4, name: "Rashed", image: "/rashed.jpg" },
-    { id: 5, name: "Tushar", image: "/tushar.jpg" },
-  ];
+/* ── Static chat data ──────────────────────────────────────────────────── */
+const CHATS = [
+  {
+    id: 1,
+    name: "Elias Sir",
+    image: "/elias.jpg",
+    lastMsg: "Ajke class hobe na...",
+    time: "2m",
+    unread: 2,
+    status: "online",
+  },
+  {
+    id: 2,
+    name: "Ekramul Islam",
+    image: "/ekramul.jpg",
+    lastMsg: "Project ta dekho vai",
+    time: "10m",
+    unread: 1,
+    status: "online",
+  },
+  {
+    id: 3,
+    name: "Amir Hamza",
+    image: "/amir.jpg",
+    lastMsg: "Assalamu Alaikum 🙂",
+    time: "1h",
+    unread: 0,
+    status: "offline",
+  },
+  {
+    id: 4,
+    name: "Rashed Bro",
+    image: "/rashed.jpg",
+    lastMsg: "Chada pai nai ajke",
+    time: "3h",
+    unread: 4,
+    status: "online",
+  },
+  {
+    id: 5,
+    name: "Tushar",
+    image: "/tushar.jpg",
+    lastMsg: "Ok, thik ache 👍",
+    time: "5h",
+    unread: 0,
+    status: "offline",
+  },
+];
 
-  const [onlineUsers] = useState([1, 3, 4]);
-  const [selectedUser, setSelectedUser] = useState(chats[0]);
-  const [message, setMessage] = useState("");
-  const [typing, setTyping] = useState(false);
+/* ── Auto-reply map ────────────────────────────────────────────────────── */
+const AUTO_REPLIES = {
+  hi: "Hey there! 👋",
+  hello: "Hello! How can I help?",
+  hey: "Hey! Kemon acho? 😄",
+  "how are you": "Alhamdulillah, ভালো আছি! তুমি?",
+  "sir kalke ki class hobe": "No, kalke asar dorkar nai 😊",
+  "class hobe": "Ha, class hobe — time 10 AM",
+  ok: "👍",
+  okay: "Sure thing!",
+  thanks: "You're welcome! 😊",
+  "thank you": "No problem at all! 🙌",
+};
 
-  // Mobile: track which panel is visible
-  const [showChat, setShowChat] = useState(false);
-
-  const chatEndRef = useRef(null);
-
-  const autoReplies = {
-    Hello: "Hey",
-    Hi: "Hii, Muntasir",
-    Hey: "Hii, Kemon Aco",
-    "How Are you": "Alhamdulillah, Valo",
-    "Sir Kalke Ki Class Hobe": "No, Kalke Asar Dorkar Nai",
-    "Sir Home Work 3 ta diye den, Please": "Na Dewa Jabe na",
+/* ── Avatar helper ─────────────────────────────────────────────────────── */
+function Avatar({ src, name, size = "md", status }) {
+  const sizeMap = {
+    sm: "w-8 h-8",
+    md: "w-10 h-10",
+    lg: "w-12 h-12",
+    xl: "w-14 h-14",
   };
-
-  const [messages, setMessages] = useState([
-    { id: 1, sender: "them", text: "Hi" },
-  ]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typing]);
-
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
-
-    const newMessage = {
-      id: Date.now(),
-      sender: "me",
-      text: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
-    const currentMessage = message;
-    setMessage("");
-    setTyping(true);
-
-    const randomDelay = Math.floor(Math.random() * 3000) + 1200;
-
-    setTimeout(() => {
-      const reply = autoReplies[currentMessage] || "Okay 😎";
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: "them",
-          text: reply,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-      setTyping(false);
-    }, randomDelay);
-  };
-
-  const handleSelectUser = (chat) => {
-    setSelectedUser(chat);
-    setShowChat(true); // on mobile, switch to chat panel
+  const dotMap = {
+    sm: "w-2 h-2",
+    md: "w-2.5 h-2.5",
+    lg: "w-3 h-3",
+    xl: "w-3.5 h-3.5",
   };
 
   return (
-    <main className="min-h-screen bg-white p-2 xs:p-3 sm:p-4 md:p-6">
+    <div className="relative shrink-0">
       <div
-        className="
-          container mx-auto
-          h-[calc(100vh-32px)] xs:h-[calc(100vh-48px)] sm:h-[calc(100vh-64px)] md:h-[calc(100vh-110px)]
-          rounded-2xl xs:rounded-3xl md:rounded-[32px]
-          border border-primary/10
-          bg-white
-          shadow-xl
-          overflow-hidden
-          grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr]
-        "
+        className={`${sizeMap[size]} rounded-full overflow-hidden bg-gradient-to-br from-brand to-secondary flex items-center justify-center shrink-0`}
       >
-        {/* ── Sidebar ── */}
+        <Image
+          src={src}
+          alt={name}
+          width={56}
+          height={56}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      </div>
+      {status && (
+        <span
+          className={`absolute bottom-0 right-0 ${dotMap[size]} rounded-full border-2 border-white ${
+            status === "online" ? "bg-green-500" : "bg-gray-400"
+          }`}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ── Typing indicator ──────────────────────────────────────────────────── */
+function TypingIndicator() {
+  return (
+    <div className="flex items-end gap-2">
+      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-secondary/60 to-secondary/30 flex items-center justify-center shrink-0">
+        <span className="text-[10px] text-white">•</span>
+      </div>
+      <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-md flex items-center gap-1.5">
+        <span
+          className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+          style={{ animationDelay: "0ms" }}
+        />
+        <span
+          className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+          style={{ animationDelay: "150ms" }}
+        />
+        <span
+          className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+          style={{ animationDelay: "300ms" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Message bubble ────────────────────────────────────────────────────── */
+function MessageBubble({ msg, isMe }) {
+  return (
+    <div className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
+      {!isMe && (
+        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-secondary/60 to-secondary/30 shrink-0 flex items-center justify-center">
+          <span className="text-[9px] text-white font-bold">U</span>
+        </div>
+      )}
+
+      <div className={`flex flex-col gap-0.5 max-w-[72%] sm:max-w-[60%] ${isMe ? "items-end" : "items-start"}`}>
         <div
           className={`
-            border-r border-primary/10 flex flex-col bg-white
-            ${showChat ? "hidden md:flex" : "flex"}
+            px-4 py-2.5 text-sm leading-relaxed
+            ${
+              isMe
+                ? "bg-gradient-to-br from-brand to-blue-600 text-white rounded-2xl rounded-br-md shadow-md shadow-brand/20"
+                : "bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md"
+            }
           `}
         >
-          {/* Top */}
-          <div className="p-3 xs:p-4 sm:p-5">
-            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-primary mb-3 xs:mb-4 sm:mb-5">
-              Messages
-            </h1>
-
-            {/* Search */}
-            <div className="relative">
-              <Search
-                size={16}
-                className="absolute left-3 xs:left-4 top-1/2 -translate-y-1/2 text-primary/50"
-              />
-              <input
-                type="text"
-                placeholder="Search chats..."
-                className="w-full h-10 xs:h-11 sm:h-12 rounded-xl xs:rounded-2xl bg-white border border-primary/10 pl-9 xs:pl-11 pr-4 text-sm xs:text-base text-primary outline-none placeholder:text-primary/40 focus:border-brand"
-              />
-            </div>
-          </div>
-
-          {/* User List */}
-          <div className="flex-1 overflow-y-auto px-2 xs:px-3 pb-4 space-y-1 xs:space-y-2">
-            {chats.map((chat) => (
-              <button
-                key={chat.id}
-                onClick={() => handleSelectUser(chat)}
-                className={`w-full flex items-center gap-3 xs:gap-4 p-3 xs:p-4 rounded-xl xs:rounded-2xl transition-all ${
-                  selectedUser.id === chat.id
-                    ? "bg-brand"
-                    : "hover:bg-primary/5"
-                }`}
-              >
-                <div className="relative shrink-0">
-                  <Image
-                    src={chat.image}
-                    alt={chat.name}
-                    width={56}
-                    height={56}
-                    className="w-11 h-11 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                    }}
-                  />
-                  {onlineUsers.includes(chat.id) && (
-                    <span className="absolute bottom-0 right-0 w-3 h-3 xs:w-4 xs:h-4 bg-green-500 rounded-full border-2 border-white" />
-                  )}
-                </div>
-
-                <div className="flex-1 text-left min-w-0">
-                  <h2 className="font-semibold text-primary text-sm xs:text-base truncate">
-                    {chat.name}
-                  </h2>
-                  <p className="text-xs xs:text-sm text-primary/60 truncate">
-                    Tap to chat 💬
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
+          {msg.text}
         </div>
 
-        {/* ── Chat Box ── */}
-        <div
+        <div className={`flex items-center gap-1 px-1 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
+          <span className="text-[10px] text-gray-400">{msg.time}</span>
+          {isMe && <CheckCheck size={11} className="text-brand/60" />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════════════════ */
+export default function MessagePage() {
+  const { user } = useAuth();
+
+  /* ── State ── */
+  const [chats] = useState(CHATS);
+  const [selectedChat, setSelectedChat] = useState(CHATS[0]);
+  const [messages, setMessages] = useState({
+    1: [{ id: 1, sender: "them", text: "Hi! Kemon acho? 😊", time: "09:00 AM" }],
+    2: [{ id: 1, sender: "them", text: "Project ta dekho vai", time: "09:10 AM" }],
+    3: [{ id: 1, sender: "them", text: "Assalamu Alaikum 🙂", time: "10:00 AM" }],
+    4: [{ id: 1, sender: "them", text: "Chada pai nai ajke 😭", time: "11:00 AM" }],
+    5: [{ id: 1, sender: "them", text: "Ok, thik ache 👍", time: "01:00 PM" }],
+  });
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showChat, setShowChat] = useState(false); // mobile nav
+  const [showInfo, setShowInfo] = useState(false);
+
+  const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
+
+  /* ── Scroll to bottom ── */
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing, selectedChat]);
+
+  /* ── Focus input on chat select ── */
+  useEffect(() => {
+    if (showChat) inputRef.current?.focus();
+  }, [showChat, selectedChat]);
+
+  /* ── Filter chats ── */
+  const filteredChats = searchQuery
+    ? chats.filter((c) =>
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.lastMsg.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : chats;
+
+  /* ── Current conversation messages ── */
+  const currentMessages = messages[selectedChat.id] || [];
+
+  /* ── Send message ── */
+  function handleSend() {
+    const text = input.trim();
+    if (!text) return;
+
+    const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const newMsg = { id: Date.now(), sender: "me", text, time: now };
+
+    setMessages((prev) => ({
+      ...prev,
+      [selectedChat.id]: [...(prev[selectedChat.id] || []), newMsg],
+    }));
+    setInput("");
+    setTyping(true);
+
+    const delay = Math.random() * 2000 + 800;
+    setTimeout(() => {
+      const key = text.toLowerCase();
+      const reply =
+        AUTO_REPLIES[key] ||
+        Object.entries(AUTO_REPLIES).find(([k]) => key.includes(k))?.[1] ||
+        "Okay 😎";
+
+      const replyMsg = {
+        id: Date.now() + 1,
+        sender: "them",
+        text: reply,
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      setMessages((prev) => ({
+        ...prev,
+        [selectedChat.id]: [...(prev[selectedChat.id] || []), replyMsg],
+      }));
+      setTyping(false);
+    }, delay);
+  }
+
+  /* ── Select chat ── */
+  function handleSelectChat(chat) {
+    setSelectedChat(chat);
+    setShowChat(true);
+    setShowInfo(false);
+  }
+
+  /* ═══════════════════ RENDER ═══════════════════ */
+  return (
+    <main className="h-[calc(100vh-80px)] bg-gray-50 flex flex-col overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
+
+        {/* ──────────────────── LEFT SIDEBAR ──────────────────── */}
+        <aside
           className={`
-            flex flex-col h-full overflow-hidden
-            ${showChat ? "flex" : "hidden md:flex"}
+            w-full sm:w-[320px] lg:w-[360px] flex-shrink-0
+            bg-white border-r border-gray-100
+            flex flex-col
+            ${showChat ? "hidden sm:flex" : "flex"}
           `}
         >
           {/* Header */}
-          <div className="h-16 xs:h-18 sm:h-20 md:h-24 px-3 xs:px-4 sm:px-6 flex items-center justify-between sticky top-0 z-20 bg-primary/10 backdrop-blur-xl shrink-0">
-            <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 min-w-0">
-              {/* Back button — mobile only */}
-              <button
-                onClick={() => setShowChat(false)}
-                className="md:hidden w-8 h-8 rounded-full flex items-center justify-center hover:bg-primary/10 transition shrink-0"
-              >
-                <ArrowLeft size={18} />
+          <div className="px-5 pt-5 pb-3 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+              <button className="w-9 h-9 rounded-full bg-brand/10 hover:bg-brand/20 flex items-center justify-center text-brand transition-all">
+                <Plus size={18} />
               </button>
-
-              <Image
-                src={selectedUser.image}
-                alt={selectedUser.name}
-                width={60}
-                height={60}
-                className="rounded-full object-cover w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 shrink-0"
-              />
-              <div className="min-w-0">
-                <h2 className="text-primary/80 text-sm xs:text-base sm:text-lg font-semibold truncate">
-                  {selectedUser.name}
-                </h2>
-                <p
-                  className={`text-xs xs:text-sm ${
-                    onlineUsers.includes(selectedUser.id)
-                      ? "text-green-500"
-                      : "text-primary/40"
-                  }`}
-                >
-                  {onlineUsers.includes(selectedUser.id)
-                    ? "Active now"
-                    : "Offline"}
-                </p>
-              </div>
             </div>
 
-            <div className="flex gap-1.5 xs:gap-2 sm:gap-3 shrink-0">
-              {[Phone, Video, Info].map((Icon, i) => (
+            {/* Search */}
+            <div className="relative">
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search messages..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 rounded-xl bg-gray-100 pl-9 pr-4 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-brand/20 transition-all"
+              />
+              {searchQuery && (
                 <button
-                  key={i}
-                  className="w-8 h-8 xs:w-9 xs:h-9 sm:w-11 sm:h-11 rounded-full bg-primary/5 hover:bg-primary/10 flex items-center justify-center text-secondary"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <Icon size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <X size={14} />
                 </button>
-              ))}
+              )}
             </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 min-h-0 overflow-y-auto p-3 xs:p-4 sm:p-6 space-y-3 xs:space-y-4 sm:space-y-5">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${msg.sender === "me" ? "items-end" : "items-start"}`}
-              >
-                <div
-                  className={`
-                    max-w-[80%] xs:max-w-[75%] sm:max-w-[420px]
-                    px-3 xs:px-4 sm:px-5
-                    py-2
-                    rounded-[20px] xs:rounded-[24px] sm:rounded-[28px]
-                    text-sm xs:text-base
-                    leading-6 xs:leading-7
-                    shadow-lg
-                    ${msg.sender === "me" ? "bg-brand text-white" : "bg-secondary text-white"}
-                  `}
-                >
-                  <p>{msg.text}</p>
-                </div>
-
-                <div
-                  className={`mt-1 px-2 text-[10px] xs:text-[12px] flex items-center gap-1 ${
-                    msg.sender === "me" ? "text-primary/50" : "text-primary/30"
-                  }`}
-                >
-                  <span>{msg.time}</span>
-                  {msg.sender === "me" && (
-                    <CheckCheck size={10} className="xs:size-3" />
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {/* Typing */}
-            {typing && (
-              <div className="flex justify-start">
-                <div className="bg-secondary px-4 xs:px-5 py-2.5 xs:py-3 rounded-3xl flex items-center gap-1.5 xs:gap-2">
-                  <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-white/40 animate-bounce" />
-                  <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-white/40 animate-bounce delay-100" />
-                  <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-white/40 animate-bounce delay-200" />
-                </div>
+          {/* Chat List */}
+          <div className="flex-1 overflow-y-auto">
+            {filteredChats.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-40 text-gray-400 text-sm gap-2">
+                <Search size={24} className="opacity-30" />
+                No conversations found
               </div>
             )}
 
-            <div ref={chatEndRef} />
+            {filteredChats.map((chat) => {
+              const isActive = selectedChat.id === chat.id;
+              return (
+                <button
+                  key={chat.id}
+                  onClick={() => handleSelectChat(chat)}
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 transition-all relative group ${
+                    isActive
+                      ? "bg-brand/8 border-r-2 border-brand"
+                      : "hover:bg-gray-50 border-r-2 border-transparent"
+                  }`}
+                >
+                  <Avatar src={chat.image} name={chat.name} size="lg" status={chat.status} />
+
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <h3 className={`font-semibold text-sm truncate ${isActive ? "text-brand" : "text-gray-800"}`}>
+                        {chat.name}
+                      </h3>
+                      <span className="text-[11px] text-gray-400 shrink-0 ml-2">{chat.time}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-gray-500 truncate">{chat.lastMsg}</p>
+                      {chat.unread > 0 && (
+                        <span className="ml-2 shrink-0 min-w-[18px] h-[18px] rounded-full bg-brand text-white text-[10px] font-bold flex items-center justify-center px-1">
+                          {chat.unread}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
+        </aside>
 
-          {/* Input */}
-          <div className="p-2.5 xs:p-3 sm:p-5 sticky bottom-0 bg-primary/10 backdrop-blur-xl shrink-0">
-            <div className="flex gap-1.5 xs:gap-2 sm:gap-3">
-              {/* Emoji — hide on smallest */}
-              <button className="hidden xs:flex w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl bg-primary/10 hover:bg-primary/15 items-center justify-center text-primary shrink-0">
-                <Smile size={18} className="sm:hidden" />
-                <Smile size={22} className="hidden sm:block" />
-              </button>
+        {/* ──────────────────── CHAT PANEL ──────────────────── */}
+        <div
+          className={`
+            flex-1 flex overflow-hidden
+            ${showChat ? "flex" : "hidden sm:flex"}
+          `}
+        >
+          {/* Main chat column */}
+          <div className="flex-1 flex flex-col overflow-hidden bg-white">
 
-              {/* Image — hide on smallest */}
-              <button className="hidden xs:flex w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl bg-primary/10 hover:bg-primary/15 items-center justify-center text-primary shrink-0">
-                <ImageIcon size={18} className="sm:hidden" />
-                <ImageIcon size={22} className="hidden sm:block" />
-              </button>
+            {/* ── Chat Header ── */}
+            <div className="h-[64px] px-4 flex items-center justify-between border-b border-gray-100 bg-white shadow-sm shrink-0 z-10">
+              <div className="flex items-center gap-3">
+                {/* Back — mobile */}
+                <button
+                  onClick={() => setShowChat(false)}
+                  className="sm:hidden w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-600 shrink-0"
+                >
+                  <ArrowLeft size={18} />
+                </button>
 
-              {/* Input */}
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSendMessage();
-                }}
-                placeholder={`Message ${selectedUser.name}...`}
-                className="flex-1 h-10 xs:h-11 sm:h-14 rounded-xl xs:rounded-2xl bg-white/5 border border-white/10 px-3 xs:px-4 sm:px-5 text-sm xs:text-base text-primary outline-none placeholder:text-primary/80 focus:border-primary/70"
-              />
+                <Avatar
+                  src={selectedChat.image}
+                  name={selectedChat.name}
+                  size="lg"
+                  status={selectedChat.status}
+                />
 
-              {/* Mic */}
-              <button className="w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-primary shrink-0">
-                <Mic size={18} className="sm:hidden" />
-                <Mic size={22} className="hidden sm:block" />
-              </button>
+                <div>
+                  <h2 className="font-semibold text-gray-900 text-sm leading-tight">
+                    {selectedChat.name}
+                  </h2>
+                  <p className={`text-xs ${selectedChat.status === "online" ? "text-green-500" : "text-gray-400"}`}>
+                    {selectedChat.status === "online" ? "Active now" : "Offline"}
+                  </p>
+                </div>
+              </div>
 
-              {/* Send */}
-              <button
-                onClick={handleSendMessage}
-                className="w-10 h-10 xs:w-11 xs:h-11 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl bg-brand flex items-center justify-center text-white hover:opacity-90 transition-all shrink-0"
-              >
-                <Send size={16} className="sm:hidden" />
-                <Send size={22} className="hidden sm:block" />
-              </button>
+              {/* Action buttons */}
+              <div className="flex items-center gap-1">
+                <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-all">
+                  <Phone size={17} />
+                </button>
+                <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-all">
+                  <Video size={17} />
+                </button>
+                <button
+                  onClick={() => setShowInfo((p) => !p)}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                    showInfo ? "bg-brand/10 text-brand" : "hover:bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  <Info size={17} />
+                </button>
+                <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-all">
+                  <MoreVertical size={17} />
+                </button>
+              </div>
+            </div>
+
+            {/* ── Messages Area ── */}
+            <div className="flex-1 overflow-y-auto px-4 py-5 space-y-3 bg-gray-50/50">
+              {/* Date divider */}
+              <div className="flex items-center gap-3 py-1">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-[11px] text-gray-400 font-medium px-2">Today</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+
+              {currentMessages.map((msg) => (
+                <MessageBubble key={msg.id} msg={msg} isMe={msg.sender === "me"} />
+              ))}
+
+              {typing && <TypingIndicator />}
+
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* ── Input Area ── */}
+            <div className="px-4 py-3 bg-white border-t border-gray-100 shrink-0">
+              <div className="flex items-center gap-2">
+                {/* Attach */}
+                <button className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-all shrink-0">
+                  <ImageIcon size={17} />
+                </button>
+
+                {/* Input box */}
+                <div className="flex-1 relative">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                    placeholder={`Message ${selectedChat.name}...`}
+                    className="w-full h-10 rounded-full bg-gray-100 px-4 pr-10 text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-brand/20 transition-all"
+                  />
+                  <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand transition-colors">
+                    <Smile size={16} />
+                  </button>
+                </div>
+
+                {/* Mic / Send toggle */}
+                {input.trim() ? (
+                  <button
+                    onClick={handleSend}
+                    className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white hover:bg-brand/80 transition-all shadow-md shadow-brand/30 shrink-0"
+                  >
+                    <Send size={16} />
+                  </button>
+                ) : (
+                  <button className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-all shrink-0">
+                    <Mic size={17} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* ──────────── Info Panel (collapsible) ──────────── */}
+          {showInfo && (
+            <aside className="hidden lg:flex w-[280px] flex-col bg-white border-l border-gray-100 overflow-y-auto">
+              {/* Profile section */}
+              <div className="flex flex-col items-center px-6 pt-8 pb-6 border-b border-gray-100">
+                <Avatar
+                  src={selectedChat.image}
+                  name={selectedChat.name}
+                  size="xl"
+                  status={selectedChat.status}
+                />
+                <h3 className="mt-3 font-bold text-gray-900 text-base">{selectedChat.name}</h3>
+                <p className={`text-xs mt-0.5 ${selectedChat.status === "online" ? "text-green-500" : "text-gray-400"}`}>
+                  {selectedChat.status === "online" ? "Active now" : "Offline"}
+                </p>
+
+                {/* Quick actions */}
+                <div className="flex gap-3 mt-5">
+                  {[
+                    { icon: Phone, label: "Call" },
+                    { icon: Video, label: "Video" },
+                    { icon: Mic, label: "Mute" },
+                  ].map(({ icon: Icon, label }) => (
+                    <button
+                      key={label}
+                      className="flex flex-col items-center gap-1.5"
+                    >
+                      <div className="w-11 h-11 rounded-full bg-brand/10 hover:bg-brand/20 flex items-center justify-center text-brand transition-all">
+                        <Icon size={17} />
+                      </div>
+                      <span className="text-[11px] text-gray-500">{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chat info */}
+              <div className="px-5 py-5 space-y-4">
+                <div>
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                    Chat Info
+                  </h4>
+                  <div className="space-y-2">
+                    {[
+                      { label: "Nickname", value: selectedChat.name.split(" ")[0] },
+                      { label: "Members", value: "2 people" },
+                      { label: "Created", value: "Jan 2024" },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="flex items-center justify-between py-1.5">
+                        <span className="text-xs text-gray-500">{label}</span>
+                        <span className="text-xs font-medium text-gray-800">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Shared media placeholder */}
+                <div>
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                    Shared Media
+                  </h4>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {[...Array(6)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="aspect-square rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center"
+                      >
+                        <ImageIcon size={14} className="text-gray-400" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Options */}
+                <div>
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                    Options
+                  </h4>
+                  <div className="space-y-1">
+                    {["Block User", "Delete Conversation", "Report"].map((opt) => (
+                      <button
+                        key={opt}
+                        className="w-full text-left py-2 px-2 rounded-lg text-xs text-red-500 hover:bg-red-50 transition-all"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </aside>
+          )}
         </div>
       </div>
     </main>

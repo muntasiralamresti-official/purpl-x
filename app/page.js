@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Sidebar from "./component/Sidebar";
 import Feed from "./component/ui/Feed";
 import { get } from "./lib/apiClient";
@@ -20,8 +21,11 @@ export default async function Home() {
       <div className="container mx-auto pt-6 px-4 flex gap-8">
         <Sidebar />
 
-        <Feed serverPosts={data?.posts || []} total={data?.total || 0} />
+        <Suspense fallback={<div className="flex-1 animate-pulse bg-gray-100 rounded-2xl min-h-screen" />}>
+          <Feed serverPosts={data?.posts || []} total={data?.total || 0} />
+        </Suspense>
       </div>
     </main>
   );
 }
+

@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Navbar from "./component/Navbar";
 import MobileFooterBar from "./component/MobileFooterBar";
+import { AuthProvider } from "./lib/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,22 +19,20 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Purpl-x",
 
-  description:
-    "Post Sharing Website",
+  description: "Post Sharing Website",
 
   /* OPEN GRAPH */
   openGraph: {
     title: "Purpl-x",
 
-    description:
-      "Post Sharing Website",
+    description: "Post Sharing Website",
 
     images: [
       {
-        url: "/purpl.png",
+        url: "/purpl-x-logo.png",
         width: 1200,
         height: 630,
-        alt: "Purpl Logo",
+        alt: "Purpl-x Logo",
       },
     ],
   },
@@ -44,16 +43,13 @@ export const metadata = {
 
     title: "Purpl-x",
 
-    description:
-      "Post Sharing Website",
+    description: "Post Sharing Website",
 
     images: ["/purpl-x-logo.png"],
   },
 };
 
-export default function RootLayout({
-  children,
-}) {
+export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
@@ -61,16 +57,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-[#050816] text-white">
-        
-        {/* NAVBAR */}
-        <Navbar />
+        <AuthProvider>
+          {/* NAVBAR */}
+          <Navbar />
 
-        {/* PAGE CONTENT */}
-        <main>
-          {children}
-        </main>
+          {/* PAGE CONTENT */}
+          <main>{children}</main>
 
-        <MobileFooterBar/>
+          <MobileFooterBar />
+        </AuthProvider>
       </body>
     </html>
   );

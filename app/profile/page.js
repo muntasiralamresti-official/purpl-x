@@ -1,38 +1,89 @@
+"use client";
+
 import {
   Briefcase,
   Calendar,
   Globe,
   GraduationCap,
+  Loader2,
   Mail,
   MapPin,
   Phone,
   User2,
 } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/lib/AuthContext";
+import { get } from "@/app/lib/apiClient";
 
-async function getUser() {
-  try {
-    const res = await fetch("https://dummyjson.com/users/1", {
-      next: { revalidate: 60 },
-    });
+export default function Profile() {
+  const { user: authUser, mounted } = useAuth();
+  const router = useRouter();
 
-    if (!res.ok) throw new Error(`Failed with status ${res.status}`);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const user = await res.json();
+  useEffect(() => {
+    // Wait for AuthContext to hydrate
+    if (!mounted) return;
 
-    // Validate required fields
-    if (!user?.id || !user?.address?.city || !user?.address?.state) {
-      throw new Error("Invalid user data structure");
+    // If not logged in, redirect to login
+    if (!authUser) {
+      router.replace("/login");
+      return;
     }
 
-    return user;
-  } catch (error) {
-    throw error; // Let Next.js handle with error.js boundary
-  }
-}
+    async function fetchUser() {
+      try {
+        setLoading(true);
+        const data = await get(`/users/${authUser.id}`, { cache: "no-store" });
 
-export default async function Profile() {
-  const user = await getUser();
+        if (!data?.id) throw new Error("Invalid user data");
+        if (!data?.address?.city || !data?.address?.state) {
+          throw new Error("Invalid user data structure");
+        }
+
+        setUser(data);
+      } catch (err) {
+        console.error("Profile fetch error:", err);
+        setError(err.message || "Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUser();
+  }, [mounted, authUser, router]);
+
+  /* Loading skeleton */
+  if (!mounted || loading) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-brand" />
+      </main>
+    );
+  }
+
+  /* Error state */
+  if (error) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button
+            onClick={() => router.push("/")}
+            className="px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition-all"
+          >
+            Go Home
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <main className="min-h-screen bg-white pb-6 px-0 xs:px-2 sm:px-4">

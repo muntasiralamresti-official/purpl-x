@@ -1,24 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Users, MessageCircle, UserCircle2, Home, Bell } from "lucide-react";
+import { useAuth } from "@/app/lib/AuthContext";
 
 export default function MobileFooterBar() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const storedUser = localStorage.getItem("purpl-user");
-      if (storedUser) setUser(JSON.parse(storedUser));
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const { user, mounted } = useAuth();
 
   if (!mounted) return null;
 

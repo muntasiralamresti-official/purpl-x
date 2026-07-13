@@ -1,7 +1,7 @@
 import { User } from "lucide-react";
 import Sidebar from "../component/Sidebar";
 import { get } from "../lib/apiClient";
-import Image from "next/image";
+import FriendGrid from "./FriendGrid";
 
 async function getUsers() {
   return await get("/users?limit=80", {
@@ -50,50 +50,10 @@ export default async function FriendsPage() {
             </div>
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 xs:gap-4 sm:gap-5">
-            {data?.users?.map((user) => (
-              <div
-                key={user.id}
-                className="bg-white rounded-xl xs:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-              >
-                {/* Image */}
-                <div className="h-28 xs:h-32 sm:h-36 md:h-40 overflow-hidden">
-                  <Image
-                    src={user.image}
-                    alt={user.firstName}
-                    width={300}
-                    height={200}
-                    className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="px-3 xs:px-4 sm:px-5 py-3 xs:py-4 sm:py-5 text-start">
-                  <h2 className="text-sm xs:text-base sm:text-lg md:text-xl font-bold text-primary truncate">
-                    {user.firstName} {user.lastName}
-                  </h2>
-                  <p className="text-[11px] xs:text-xs sm:text-sm text-primary/60 mt-0.5 xs:mt-1">
-                    {(user.id % 40) + 6} mutual friends
-                  </p>
-
-                  {/* Buttons */}
-                  <div className="mt-3 xs:mt-4 sm:mt-5 space-y-1.5 xs:space-y-2">
-                    <button className="w-full py-2 xs:py-2.5 sm:py-3 rounded-xl xs:rounded-2xl bg-brand hover:bg-brand/80 text-white text-xs xs:text-sm sm:text-base font-medium transition-all">
-                      Add Friend
-                    </button>
-                    <button className="w-full py-2 xs:py-2.5 sm:py-3 rounded-xl xs:rounded-2xl bg-white hover:bg-gray-50 border border-gray-200 text-primary text-xs xs:text-sm sm:text-base font-medium transition-all">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* FriendGrid — client component handles search + friend toggle */}
+          <FriendGrid users={data?.users || []} />
         </div>
       </div>
     </main>
   );
 }
-
-// Update Next:- Usable Add Friend and Remove Button

@@ -3,58 +3,48 @@
 "use client";
 
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { post } from "@/app/lib/apiClient";
+import { useAuth } from "@/app/lib/AuthContext";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-
   const [username, setUsername] = useState("");
-
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const { login } = useAuth();
+  const router = useRouter();
 
   /* LOGIN */
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
 
     try {
       setLoading(true);
 
-      const response = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+      // Use apiClient.post() instead of raw fetch
+      const data = await post("/auth/login", {
+        username,
+        password,
+        expiresInMins: 60 * 24 * 7,
       });
 
-      // Check response status FIRST
-      if (!response.ok) {
-        throw new Error(`Login failed: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      /* INVALID */
-      if (!data.id || data.message) {
+      /* INVALID response */
+      if (!data?.id) {
         throw new Error("Invalid username or password");
       }
 
-      /* SAVE USER */
-      localStorage.setItem("purpl-user", JSON.stringify(data));
+      /* SAVE via AuthContext (handles localStorage + cookie) */
+      login(data);
 
-      alert(`Welcome ${data.firstName} 🚀`);
-
-      window.location.href = "/";
+      router.push("/");
     } catch (error) {
       console.error("Login error:", error);
-
-      alert(error.message || "Login failed 😵");
+      setErrorMsg(error.message || "Login failed 😵");
     } finally {
       setLoading(false);
     }
@@ -88,8 +78,21 @@ export default function LoginPage() {
           <div className="max-w-md mx-auto">
             {/* LOGO */}
             <div className="flex justify-center mb-8">
-              <img src="/purpl-x.png" alt="Purpl-x" className="w-[160px]" />
+              <Image
+                src="/purpl-x-logo.png"
+                alt="Purpl-x"
+                width={160}
+                height={40}
+                className="object-contain"
+              />
             </div>
+
+            {/* ERROR */}
+            {errorMsg && (
+              <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm text-center">
+                {errorMsg}
+              </div>
+            )}
 
             {/* FORM */}
             <form onSubmit={handleLogin} className="space-y-5">
@@ -122,6 +125,9 @@ export default function LoginPage() {
                     text-sm
                     border-primary/40
                     text-primary
+                    outline-none
+                    focus:border-brand
+                    transition-all
                   "
                 />
               </div>
@@ -155,6 +161,9 @@ export default function LoginPage() {
                     text-sm
                     border-primary/40
                     text-primary
+                    outline-none
+                    focus:border-brand
+                    transition-all
                   "
                 />
               </div>
@@ -176,6 +185,7 @@ export default function LoginPage() {
                   items-center
                   justify-center
                   gap-2
+                  disabled:opacity-60
                 "
               >
                 {loading ? (
@@ -198,7 +208,8 @@ export default function LoginPage() {
                 text-gray-500
               "
             >
-              DummyJSON auth✨
+              DummyJSON auth ✨ — try{" "}
+              <span className="font-mono text-brand">emilys / emilyspass</span>
             </div>
           </div>
         </div>

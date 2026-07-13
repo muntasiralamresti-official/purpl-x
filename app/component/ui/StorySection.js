@@ -118,6 +118,7 @@ function StoryViewer({ stories, startIndex, onClose }) {
   useEffect(() => {
     clearInterval(intervalRef.current);
     let current = 0;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProgress(0);
     intervalRef.current = setInterval(() => {
       current += 100 / (DURATION / 100);
@@ -295,7 +296,7 @@ function UploadModal({ onClose, onPost }) {
       id: Date.now(),
       name: "You",
       username: "@you",
-      image: "/purpl-x.png",
+      image: "/purpl-x-logo.png",
       story: preview,
       type: fileType,
       caption,

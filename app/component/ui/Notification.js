@@ -19,7 +19,6 @@ export default function NotificationBell() {
 
       try {
         const data = await get("/users?limit=4");
-        console.log("NOTIFICATION DATA:", data);
 
         // Check if data is error response
         if (!data || data.success === false) {
