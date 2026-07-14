@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import {
   Bookmark, Check, ChevronDown, Eye, Flag, Globe,

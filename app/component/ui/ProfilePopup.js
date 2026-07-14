@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -8,6 +7,7 @@ import {
   Bookmark,
   Users,
   LogOut,
+  LogIn,
   ChevronRight,
   Loader2,
   UserCircle2,
@@ -42,9 +42,11 @@ export default function ProfilePopup() {
     return (
       <Link
         href="/login"
-        className="px-4 py-2 rounded-full bg-brand text-white text-sm font-medium hover:opacity-90 transition-all"
+        className="w-9 h-9 xs:w-10 xs:h-10 sm:w-11 sm:h-11 rounded-full bg-brand text-white flex items-center justify-center hover:opacity-90 transition-all border-2 border-transparent"
+        aria-label="Login"
+        title="Login"
       >
-        Login
+        <LogIn size={20} className="text-white" />
       </Link>
     );
   }
